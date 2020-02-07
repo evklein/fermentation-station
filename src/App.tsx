@@ -4,16 +4,11 @@ import './App.css';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import FormControl, { FormControlProps } from 'react-bootstrap/FormControl';
-import firebase, { auth } from 'firebase';
-import { FirebaseConfig } from './config';
+
 
 const App = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  if (!firebase.apps.length) {
-    firebase.initializeApp(FirebaseConfig);
-  }
 
 
   const login = (event: object) => {
@@ -24,9 +19,9 @@ const App = () => {
     event.preventDefault();
     event.stopPropagation();
     
-    firebase.auth().createUserWithEmailAndPassword(email, password).then((result) => {
-      console.log(result);
-    });
+    // firebase.auth().createUserWithEmailAndPassword(email, password).then((result) => {
+    //   console.log(result);
+    // });
   }
 
   return (
