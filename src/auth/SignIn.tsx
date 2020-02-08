@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import firebase from 'firebase';
 import { useDispatch } from 'react-redux';
-import { signUpUser, signInUser } from '../actions/AuthActions';
+import { signInUser } from '../actions/AuthActions';
 
 
 const SignUp = () => {
@@ -19,29 +19,11 @@ const SignUp = () => {
         event.stopPropagation();
         setError('');
         
-        if (checkPasswords()) {
-            firebase.auth().createUserWithEmailAndPassword(email, password).then((response) => {
-                dispatch(signUpUser(email, password));
-                login();
-            }, (error) => {
-                setError(error.message);
-            });
-        }
-    }
-
-    const login = () => {
         firebase.auth().signInWithEmailAndPassword(email, password).then((response) => {
             dispatch(signInUser(email, password));
+        }, (error) => {
+            setError(error.message);
         });
-    }
-
-    const checkPasswords = (): boolean => {
-        if (password !== confirmPassword) {
-            setError('Passwords do not match.');
-            return false;
-        }
-        
-        return true;
     }
 
     return (
@@ -55,11 +37,7 @@ const SignUp = () => {
                     <Form.Label>Password</Form.Label>
                     <Form.Control type="password" placeholder="Enter password" onChange={(event: React.FormEvent) => { setPassword((event.currentTarget as any).value )}} />
                 </Form.Group>
-                <Form.Group>
-                    <Form.Label>Confirm Password</Form.Label>
-                    <Form.Control type="password" placeholder="Confirm Password" onChange={(event: React.FormEvent) => { setConfirmPassword((event.currentTarget as any).value )}} />
-                </Form.Group>
-                <Button type="submit">Sign Up</Button>
+                <Button type="submit">Log In</Button>
                 { error ? <Alert variant="danger">{ error }</Alert> : '' }
             </Form>
         </div>
