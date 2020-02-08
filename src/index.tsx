@@ -4,8 +4,22 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { createStore, applyMiddleware } from 'redux';
+import reducers from './reducers';
+import reduxThunk from 'redux-thunk';
+import { Provider } from 'react-redux';
+import { AuthContext } from './context/AuthContext';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+export const store = createStore(reducers);
+console.log('Initial state.');
+console.log(store.getState());
+
+ReactDOM.render(
+    <Provider store={store}>
+        <App />
+    </Provider>,
+    document.getElementById('root')
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
