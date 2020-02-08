@@ -5,14 +5,14 @@ import Alert from 'react-bootstrap/Alert';
 import firebase from 'firebase';
 import { useDispatch } from 'react-redux';
 import { signInUser } from '../../redux/actions/AuthActions';
-
+import { Redirect } from 'react-router-dom';
 
 const SignUp = () => {
     const [dispatch, setDispatch] = useState(useDispatch);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
+    const [redirect, setRedirect] = useState(false);
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) : void => {
         event.preventDefault();
@@ -21,6 +21,7 @@ const SignUp = () => {
         
         firebase.auth().signInWithEmailAndPassword(email, password).then((response) => {
             dispatch(signInUser(email, password));
+            setRedirect(true);
         }, (error) => {
             setError(error.message);
         });
@@ -28,6 +29,7 @@ const SignUp = () => {
 
     return (
         <div>
+            { redirect ? <Redirect to="/home"></Redirect> : '' }
             <Form onSubmit={handleSubmit}>
                 <Form.Group>
                     <Form.Label>Email address</Form.Label>

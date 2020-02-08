@@ -1,4 +1,4 @@
-import UserAuthAction, { CREATE, LOGIN, LOGOUT } from '../types/AuthTypes';
+import UserAuthAction, { CREATE, LOGIN, LOGOUT } from "../types/AuthTypes"
 
 export const signUpUser = (email: string, password: string): UserAuthAction => {
     return {
