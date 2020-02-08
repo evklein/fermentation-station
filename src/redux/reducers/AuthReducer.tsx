@@ -1,4 +1,4 @@
-import UserAuthAction, { LOGIN, LOGOUT, CREATE } from '../actions/types';
+import UserAuthAction, { LOGIN, LOGOUT, CREATE } from '../types/AuthTypes';
 
 const defaultAuthState = {
     isLoggedIn: false,

@@ -1,11 +1,12 @@
 import React, { FormEvent, useState } from 'react';
 import './App.css';
-import SignUp from './auth/SignUp';
-import SignIn from './auth/SignIn';
+import SignUp from './components/auth/SignUp';
+import SignIn from './components/auth/SignIn';
 import firebase from 'firebase';
 import { FirebaseConfig } from './config';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { Navbar, Nav } from 'react-bootstrap';
+import Home from './components/home/Home';
 
 
 
@@ -30,6 +31,9 @@ const App = () => {
         </Route>
         <Route path="/sign-in">
           <SignIn></SignIn>
+        </Route>
+        <Route path="/home">
+          <Home></Home>
         </Route>
       </Switch>
     </Router>

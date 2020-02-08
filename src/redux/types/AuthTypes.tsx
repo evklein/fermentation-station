@@ -9,3 +9,4 @@ export default interface UserAuthAction {
         password: string
     }
 }
+

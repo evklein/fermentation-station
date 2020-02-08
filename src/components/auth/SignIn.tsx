@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import firebase from 'firebase';
 import { useDispatch } from 'react-redux';
-import { signInUser } from '../actions/AuthActions';
+import { signInUser } from '../../redux/actions/AuthActions';
 
 
 const SignUp = () => {

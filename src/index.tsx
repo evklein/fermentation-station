@@ -5,10 +5,9 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { createStore, applyMiddleware } from 'redux';
-import reducers from './reducers';
+import reducers from './redux/reducers';
 import reduxThunk from 'redux-thunk';
 import { Provider } from 'react-redux';
-import { AuthContext } from './context/AuthContext';
 
 export const store = createStore(reducers);
 console.log('Initial state.');
