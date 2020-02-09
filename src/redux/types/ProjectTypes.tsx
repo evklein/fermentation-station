@@ -19,6 +19,7 @@ export interface Project {
 export interface ProjectAction {
     type: string
     payload: firebase.firestore.DocumentData
+    documentID: string
 }
 
 export interface ProjectState {

@@ -10,7 +10,7 @@ import CreateProjectModal from './CreateProjectModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt } from '@fortawesome/fontawesome-free-solid';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { faBug, faWineBottle, faThermometerEmpty, faBacon } from '@fortawesome/free-solid-svg-icons';
+import { faBug, faWineBottle, faThermometerEmpty, faBacon, faSkull } from '@fortawesome/free-solid-svg-icons';
 import ModifyProjectModal from './ModifyProjectModal';
 
 const Home = () => {
@@ -26,6 +26,7 @@ const Home = () => {
         database.collection("projects").where('owner', '==', store.getState().auth.email).get().then((response) => {
             response.forEach((document) => {
                 const documentData = document.data();
+                documentData.documentID = document.id;
                 dispatch(createNewProject(documentData));
             });
             
@@ -51,6 +52,8 @@ const Home = () => {
                 return faThermometerEmpty;
             case 'Curing':
                 return faBacon;
+            case 'Dead':
+                return faSkull;
             default:
                 return faBug;
         }

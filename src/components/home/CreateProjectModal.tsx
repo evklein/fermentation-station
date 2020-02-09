@@ -62,6 +62,7 @@ const CreateProjectModal = () => {
                                 <option>Bottled/2F</option>
                                 <option>Cold Rest</option>
                                 <option>Curing</option>
+                                <option>Dead</option>
                             </Form.Control>
                         </Form.Group>
                         <Form.Group>
@@ -81,7 +82,7 @@ const CreateProjectModal = () => {
                             { needsFeed ?
                                 <div>
                                     <Form.Control placeholder="Number of hours between feeds..." type="number" onChange={(event: React.FormEvent) => { setHoursBetweenFeeds((event.currentTarget as any).value) }}></Form.Control>
-                                    <Form.Control placeholder="Feed material..."></Form.Control>
+                                    <Form.Control placeholder="Feed material..." onChange={(event: React.FormEvent) => { setFeedMaterials((event.currentTarget as any).value) }}></Form.Control>
                                 </div> : ''
                             }
                         </Form.Group>
