@@ -6,6 +6,7 @@ import { Button, Card } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { CREATE_NEW_PROJECT } from '../../redux/types/ProjectTypes';
 import { createNewProject } from '../../redux/actions/ProjectActions';
+import CreateProjectModal from './CreateProjectModal';
 
 
 const Home = () => {
@@ -65,6 +66,7 @@ const Home = () => {
                     </Card.Body>
                 </Card>
             )}
+            <CreateProjectModal></CreateProjectModal>
         </div>
     );
 }
