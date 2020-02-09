@@ -31,10 +31,12 @@ const CreateProjectModal = () => {
             feedHours: hoursBetweenFeeds,
             feedMaterial: feedMaterials,
             notes: notes,
-            done: false
+            done: false,
+            documentID: ''
         }
 
         firebase.firestore().collection('projects').add(project).then((response) => {
+            project.documentID = response.id;
             dispatch(createNewProject(project));
             setModalOpen(false);
         });

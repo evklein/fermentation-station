@@ -23,7 +23,8 @@ const ProjectReducer = (state = defaultProjectState, action: ProjectAction) => {
             }
         case DELETE_PROJECT:
             return {
-                ...state
+                ...state,
+                userProjects: [...state.userProjects.filter((project) => { return project.documentID !== action.documentID})]
             }
         case VIEW_PROJECT:
             return {

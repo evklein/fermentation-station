@@ -5,12 +5,12 @@ import firebase from 'firebase';
 import { Button, Card } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { CREATE_NEW_PROJECT, ProjectState } from '../../redux/types/ProjectTypes';
-import { createNewProject, viewProject } from '../../redux/actions/ProjectActions';
+import { createNewProject, viewProject, deleteProject } from '../../redux/actions/ProjectActions';
 import CreateProjectModal from './CreateProjectModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt } from '@fortawesome/fontawesome-free-solid';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { faBug, faWineBottle, faThermometerEmpty, faBacon, faSkull } from '@fortawesome/free-solid-svg-icons';
+import { faBug, faWineBottle, faThermometerEmpty, faBacon, faSkull, faTrash } from '@fortawesome/free-solid-svg-icons';
 import ModifyProjectModal from './ModifyProjectModal';
 
 const Home = () => {
@@ -63,6 +63,12 @@ const Home = () => {
         dispatch(viewProject(project));
     }
 
+    const deleteItem = (project: firebase.firestore.DocumentData) => {
+        firebase.firestore().doc('projects/' + project.documentID).delete().then((response) => {
+            dispatch(deleteProject(project, project.documentID));
+        })
+    }
+
     return (
         <div>
             { !store.getState().auth.isLoggedIn ? <Redirect to="/sign-in" /> : '' }
@@ -72,6 +78,9 @@ const Home = () => {
                         <Card.Title>{ project.name }
                             <Button variant="info" onClick={() => editProject(project)}>
                                 <FontAwesomeIcon icon={faPencilAlt as IconProp}></FontAwesomeIcon>
+                            </Button>
+                            <Button variant="danger" onClick={() => deleteItem(project)}>
+                                <FontAwesomeIcon icon={faTrash as IconProp}></FontAwesomeIcon>
                             </Button>
                         </Card.Title>
                         <Card.Text>
