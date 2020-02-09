@@ -7,18 +7,19 @@ import { FirebaseConfig } from './config';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { Navbar, Nav } from 'react-bootstrap';
 import Home from './components/home/Home';
-
-
+import { faCoffee } from '@fortawesome/fontawesome-free-solid';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 const App = () => {
   if (!firebase.apps.length) {
     firebase.initializeApp(FirebaseConfig);
-}
+  }
 
   return (
     <Router>
       <Navbar bg="dark" expand="lg">
-        <Navbar.Brand>Fermentation Station</Navbar.Brand>
+        <Navbar.Brand>Fermentation Station <FontAwesomeIcon icon={faCoffee as IconProp}/></Navbar.Brand>
         <Nav className="mr-auto">
           <Link to="/sign-up">Sign Up</Link>
           <Link to="/sign-in"></Link>

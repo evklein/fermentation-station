@@ -4,6 +4,7 @@ import firebase from 'firebase';
 import { store } from '../../index';
 import { useDispatch } from 'react-redux';
 import { createNewProject } from '../../redux/actions/ProjectActions';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const CreateProjectModal = () => {
     const [dispatch, setDispatch] = useState(useDispatch);
@@ -58,7 +59,7 @@ const CreateProjectModal = () => {
                         <Form.Group>
                             <Form.Control as="select" placeholder="Current status..." onChange={(event: React.FormEvent) => { setStatus((event.currentTarget as any).value )}}>
                                 <option>Fermenting</option>
-                                <option>Bottled (2F)</option>
+                                <option>Bottled/2F</option>
                                 <option>Cold Rest</option>
                                 <option>Curing</option>
                             </Form.Control>

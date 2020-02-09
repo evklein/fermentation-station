@@ -7,7 +7,10 @@ import { useDispatch } from 'react-redux';
 import { CREATE_NEW_PROJECT } from '../../redux/types/ProjectTypes';
 import { createNewProject } from '../../redux/actions/ProjectActions';
 import CreateProjectModal from './CreateProjectModal';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPencilAlt } from '@fortawesome/fontawesome-free-solid';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { faBug, faWineBottle, faThermometerEmpty, faBacon } from '@fortawesome/free-solid-svg-icons';
 
 const Home = () => {
     const [dispatch, setDispatch] = useState(useDispatch);
@@ -39,14 +42,28 @@ const Home = () => {
                 new Date(seconds * 10000).toLocaleTimeString('en-US');
     }
 
+    const getStatusIcon = (project: firebase.firestore.DocumentData): IconProp => {
+        switch (project.status) {
+            case 'Bottled/2F':
+                return faWineBottle;
+            case 'Cold Rest':
+                return faThermometerEmpty;
+            case 'Curing':
+                return faBacon;
+            default:
+                return faBug;
+        }
+    }
+
     return (
         <div>
             { !store.getState().auth.isLoggedIn ? <Redirect to="/sign-in" /> : '' }
             { userProjects.map((project: firebase.firestore.DocumentData) =>
                 <Card style={{ width: '18rem' }}>
                     <Card.Body>
-                        <Card.Title>{ project.name }</Card.Title>
+                        <Card.Title>{ project.name } <FontAwesomeIcon icon={faPencilAlt as IconProp}></FontAwesomeIcon></Card.Title>
                         <Card.Text>
+                            <FontAwesomeIcon icon={getStatusIcon(project)}></FontAwesomeIcon>
                             { project.status } <br/>
                             {/* Started: { formatDate(project.startDate.seconds) } <br />
                             { project.doneDate !== null ? 
