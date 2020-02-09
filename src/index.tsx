@@ -10,8 +10,6 @@ import reduxThunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 
 export const store = createStore(reducers);
-console.log('Initial state.');
-console.log(store.getState());
 
 ReactDOM.render(
     <Provider store={store}>

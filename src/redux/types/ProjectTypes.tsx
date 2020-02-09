@@ -2,6 +2,7 @@
 export const CREATE_NEW_PROJECT: string = "CREATE_NEW_PROJECT";
 export const UPDATE_PROJECT: string = "UPDATE_PROJECT";
 export const DELETE_PROJECT: string = "DELETE_PROJECT";
+export const VIEW_PROJECT: string = "VIEW_PROJECT";
 
 export interface Project {
     name: string
@@ -18,4 +19,9 @@ export interface Project {
 export interface ProjectAction {
     type: string
     payload: firebase.firestore.DocumentData
+}
+
+export interface ProjectState {
+    userProjects: firebase.firestore.DocumentData[],
+    currentlyViewedProject: firebase.firestore.DocumentData
 }
