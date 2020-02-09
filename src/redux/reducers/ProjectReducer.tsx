@@ -2,12 +2,13 @@
 import { Project, ProjectAction, CREATE_NEW_PROJECT, UPDATE_PROJECT, DELETE_PROJECT } from '../types/ProjectTypes';
 
 const defaultProjectState = {
-    projects: []
+    userProjects: [] as firebase.firestore.DocumentData
 }
 
 const ProjectReducer = (state = defaultProjectState, action: ProjectAction) => {
     switch (action.type) {
         case CREATE_NEW_PROJECT:
+            state.userProjects.push(action.payload);
             return {
                 ...state
             }
@@ -25,3 +26,5 @@ const ProjectReducer = (state = defaultProjectState, action: ProjectAction) => {
             }
     }
 }
+
+export default ProjectReducer;

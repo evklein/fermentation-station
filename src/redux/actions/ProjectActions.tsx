@@ -1,6 +1,6 @@
 import { Project, ProjectAction, CREATE_NEW_PROJECT, UPDATE_PROJECT, DELETE_PROJECT } from '../types/ProjectTypes';
 
-export const createNewProject = (project: Project): ProjectAction => {
+export const createNewProject = (project: firebase.firestore.DocumentData): ProjectAction => {
     return {
         type: CREATE_NEW_PROJECT,
         payload: project
