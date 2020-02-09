@@ -16,10 +16,9 @@ const Home = () => {
 
     useEffect(() => {
         initializeProjects();
-    });
+    }, []);
 
     const initializeProjects = () => {
-        let count = 1;
         database.collection("projects").where('owner', '==', store.getState().auth.email).get().then((response) => {
             response.forEach((document) => {
                 const documentData = document.data();
@@ -29,6 +28,11 @@ const Home = () => {
             setUserProjects(store.getState().projects.userProjects);
         });
     }
+
+    // Check for new/updated/deleted items.
+    store.subscribe(() => {
+        setUserProjects(store.getState().projects.userProjects);
+    })
 
     const formatDate = (seconds: number) => {
         return new Date(seconds * 1000).toLocaleDateString('en-US') + ' ' + 
@@ -44,12 +48,12 @@ const Home = () => {
                         <Card.Title>{ project.name }</Card.Title>
                         <Card.Text>
                             { project.status } <br/>
-                            Started: { formatDate(project.startDate.seconds) } <br />
+                            {/* Started: { formatDate(project.startDate.seconds) } <br />
                             { project.doneDate !== null ? 
                                 <div>
                                     Done by: { formatDate(project.doneDate.seconds) }
                                 </div> : ''
-                            }
+                            } */}
                             { project.feedMaterial ?
                                 <div>
                                     Feed Material: { project.feedMaterial } 
@@ -60,8 +64,8 @@ const Home = () => {
                                     Notes: { project.notes }
                                 </div> : ''
                             }
-                            { project.feedHours ? <Button variant="outline-success">Fed Today</Button> : '' }
-                            { project.burpHours ? <Button variant="outline-primary">Burped Today</Button> : '' }
+                            { project.feedHours > 0 ? <Button variant="outline-success">Fed Today</Button> : '' }
+                            { project.burpHours > 0 ? <Button variant="outline-primary">Burped Today</Button> : '' }
                         </Card.Text>
                     </Card.Body>
                 </Card>

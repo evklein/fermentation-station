@@ -1,8 +1,12 @@
 import { Modal, Button, FormControl, Form, Card} from 'react-bootstrap';
 import React, { useState } from 'react';
 import firebase from 'firebase';
+import { store } from '../../index';
+import { useDispatch } from 'react-redux';
+import { createNewProject } from '../../redux/actions/ProjectActions';
 
 const CreateProjectModal = () => {
+    const [dispatch, setDispatch] = useState(useDispatch);
     const [modalOpen, setModalOpen] = useState(false);
     const [projectName, setProjectName] = useState('');
     const [notes, setNotes] = useState('');
@@ -12,11 +16,26 @@ const CreateProjectModal = () => {
     const [hoursBetweenFeeds, setHoursBetweenFeeds] = useState(0);
     const [feedMaterials, setFeedMaterials] = useState('');
     const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState();
+    const [endDate, setEndDate] = useState(new Date('01/01/1900'));
+    const [status, setStatus] = useState('Fermentation');
     
     const handleSubmit = () => {
-        firebase.firestore().collection('projects').add({
-            
+        const project = {
+            name: projectName,
+            owner: store.getState().auth.email,
+            status: status,
+            startDate: startDate,
+            doneDate: endDate,
+            burpHours: hoursBetweenBurps,
+            feedHours: hoursBetweenFeeds,
+            feedMaterial: feedMaterials,
+            notes: notes,
+            done: false
+        }
+
+        firebase.firestore().collection('projects').add(project).then((response) => {
+            dispatch(createNewProject(project));
+            setModalOpen(false);
         });
     }
 
@@ -37,7 +56,7 @@ const CreateProjectModal = () => {
                             <Form.Control placeholder="Project name" onChange={(event: React.FormEvent) => { setProjectName((event.currentTarget as any).value )}} />
                         </Form.Group>
                         <Form.Group>
-                            <Form.Control as="select" placeholder="Current status...">
+                            <Form.Control as="select" placeholder="Current status..." onChange={(event: React.FormEvent) => { setStatus((event.currentTarget as any).value )}}>
                                 <option>Fermenting</option>
                                 <option>Bottled (2F)</option>
                                 <option>Cold Rest</option>
@@ -55,12 +74,12 @@ const CreateProjectModal = () => {
                         <Form.Group>
                             <Form.Check type="checkbox" label="Needs Regular Burping" onChange={(event: React.FormEvent) => { setBurp(!needsBurp)}}></Form.Check>
                             { needsBurp ? 
-                                <Form.Control placeholder="Number of hours between burps" type="number"></Form.Control> : ''
+                                <Form.Control placeholder="Number of hours between burps" type="number" onChange={(event: React.FormEvent) => { setHoursBetweenBurps((event.currentTarget as any).value) }}></Form.Control> : ''
                             }
                             <Form.Check type="checkbox" label="Needs Regular Feeding" onChange={(event: React.FormEvent) => { setFeed(!needsFeed)}}></Form.Check>
                             { needsFeed ?
                                 <div>
-                                    <Form.Control placeholder="Number of hours between feeds..." type="number"></Form.Control>
+                                    <Form.Control placeholder="Number of hours between feeds..." type="number" onChange={(event: React.FormEvent) => { setHoursBetweenFeeds((event.currentTarget as any).value) }}></Form.Control>
                                     <Form.Control placeholder="Feed material..."></Form.Control>
                                 </div> : ''
                             }
