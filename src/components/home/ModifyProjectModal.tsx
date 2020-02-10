@@ -7,7 +7,7 @@ import { createNewProject, updateProject } from '../../redux/actions/ProjectActi
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt, faCheck } from '@fortawesome/fontawesome-free-solid';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { formatDate } from '../../utility/helper';
+import { formatDate, convertSecondsToProperFormat, convertUnitsToSeconds } from '../../utility/helper';
 
 const ModifyProjectModal = () => {
     const [dispatch, setDispatch] = useState(useDispatch);
@@ -16,13 +16,19 @@ const ModifyProjectModal = () => {
     const [notes, setNotes] = useState('');
     const [needsBurp, setBurp] = useState(false);
     const [needsFeed, setFeed] = useState(false);
-    const [hoursBetweenBurps, setHoursBetweenBurps] = useState(0);
-    const [hoursBetweenFeeds, setHoursBetweenFeeds] = useState(0);
     const [feedMaterials, setFeedMaterials] = useState('');
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [status, setStatus] = useState('');
     const [done, setDone] = useState(false);
+    const [feedTimeUnits, setFeedTimeUnits] = useState('Hour(s)');
+    const [feedTimeValue, setFeedTimeValue] = useState(0);
+    const [burpTimeUnits, setBurpTimeUnits] = useState('Hour(s)');
+    const [burpTimeValue, setBurpTimeValue] = useState(0);
+    const [lastFeedTime, setLastFeedTime] = useState(0);
+    const [lastBurpTime, setLastBurpTime] = useState(0);
+    const [initialNeedsFeed, setInitialNeedsFeed] = useState(false); // Use this in case the user decides to add feed time after it wasn't already there.
+    const [initialNeedsBurp, setInitialNeedsBurp] = useState(false);
 
     store.subscribe(() => {
         const currentProject = store.getState().projects.currentlyViewedProject;
@@ -32,14 +38,20 @@ const ModifyProjectModal = () => {
             setProjectName(currentProject.name);
             setStatus(currentProject.status);
             setNotes(currentProject.notes);
-            setBurp(currentProject.burpHours > 0);
-            setHoursBetweenBurps(currentProject.burpHours);
-            setFeed(currentProject.feedHours > 0);
-            setHoursBetweenFeeds(currentProject.feedHours);
+            setBurp(currentProject.burpTime > 0);
+            setFeed(currentProject.feedTime > 0);
+            setInitialNeedsBurp(currentProject.burpTime > 0);
+            setInitialNeedsFeed(currentProject.feedTime > 0);
             setFeedMaterials(currentProject.feedMaterial);
             setDone(currentProject.done);
             setStartDate(currentProject.startDate);
             setEndDate(currentProject.doneDate);
+            setFeedTimeUnits(convertSecondsToProperFormat(currentProject.feedTime).unit);
+            setFeedTimeValue(convertSecondsToProperFormat(currentProject.feedTime).value);
+            setBurpTimeUnits(convertSecondsToProperFormat(currentProject.burpTime).unit);
+            setBurpTimeValue(convertSecondsToProperFormat(currentProject.burpTime).value);
+            setLastFeedTime(currentProject.lastFeedTime);
+            setLastBurpTime(currentProject.lastBurpTime);
             setModalOpen(true);
         }
     });
@@ -53,8 +65,10 @@ const ModifyProjectModal = () => {
             status: status,
             startDate: startDate,
             doneDate: endDate ? endDate : null,
-            burpHours: hoursBetweenBurps,
-            feedHours: hoursBetweenFeeds,
+            burpTime: needsBurp ? convertUnitsToSeconds(burpTimeValue, burpTimeUnits) : 0,
+            feedTime: needsFeed ? convertUnitsToSeconds(feedTimeValue, feedTimeUnits) : 0,
+            lastFeedTime: needsFeed ? ((!initialNeedsFeed) ? Date.now() : lastFeedTime) : 0,
+            lastBurpTime: needsBurp ? ((!initialNeedsBurp) ? Date.now() : lastBurpTime) : 0,
             feedMaterial: feedMaterials,
             notes: notes,
             done: done,
@@ -97,15 +111,28 @@ const ModifyProjectModal = () => {
                             <Form.Control type="text" defaultValue={endDate ? formatDate(endDate) : ''} onChange={(event: React.FormEvent) => { setEndDate((event.currentTarget as any).value) }}></Form.Control>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Check checked={needsBurp} type="checkbox" label="Needs Regular Burping" onChange={(event: React.FormEvent) => { setBurp(!needsBurp)}}></Form.Check>
+                            <Form.Check type="checkbox" defaultChecked={needsBurp} label="Needs Regular Burping" onChange={(event: React.FormEvent) => { setBurp(!needsBurp)}}></Form.Check>
                             { needsBurp ? 
-                                <Form.Control value={hoursBetweenBurps > 0 ? hoursBetweenFeeds.toString() : ''} placeholder="Number of hours between burps" type="number" onChange={(event: React.FormEvent) => { setHoursBetweenBurps((event.currentTarget as any).value) }}></Form.Control> : ''
+                                <div>
+                                    <Form.Control placeholder="Number" type="number" defaultValue={burpTimeValue} onChange={(event: React.FormEvent) => { setBurpTimeValue((event.currentTarget as any).value) }}></Form.Control>
+                                    <Form.Control as="select" value={burpTimeUnits} onChange={(event: React.FormEvent) => { setBurpTimeUnits((event.currentTarget as any).value )}}>
+                                        <option>Hour(s)</option>
+                                        <option>Day(s)</option>
+                                        <option>Week(s)</option>
+                                    </Form.Control>
+                                </div>
+                                : ''
                             }
-                            <Form.Check checked={needsFeed} type="checkbox" label="Needs Regular Feeding" onChange={(event: React.FormEvent) => { setFeed(!needsFeed)}}></Form.Check>
+                            <Form.Check type="checkbox" defaultChecked={needsFeed} label="Needs Regular Feeding" onChange={(event: React.FormEvent) => { setFeed(!needsFeed)}}></Form.Check>
                             { needsFeed ?
                                 <div>
-                                    <Form.Control defaultValue={hoursBetweenFeeds > 0 ? hoursBetweenFeeds.toString() : ''} placeholder="Number of hours between feeds..." type="number" onChange={(event: React.FormEvent) => { setHoursBetweenFeeds((event.currentTarget as any).value) }}></Form.Control>
-                                    <Form.Control value={feedMaterials} placeholder="Feed material..." onChange={(event: React.FormEvent) => { setFeedMaterials((event.currentTarget as any).value) }}></Form.Control>
+                                    <Form.Control placeholder="Number" type="number" defaultValue={feedTimeValue} onChange={(event: React.FormEvent) => { setFeedTimeValue((event.currentTarget as any).value) }}></Form.Control>
+                                    <Form.Control as="select" value={feedTimeUnits} onChange={(event: React.FormEvent) => { setFeedTimeUnits((event.currentTarget as any).value )}}>
+                                        <option>Hour(s)</option>
+                                        <option>Day(s)</option>
+                                        <option>Week(s)</option>
+                                    </Form.Control>
+                                    <Form.Control placeholder="Feed material..." onChange={(event: React.FormEvent) => { setFeedMaterials((event.currentTarget as any).value) }}></Form.Control>
                                 </div> : ''
                             }
                         </Form.Group>
