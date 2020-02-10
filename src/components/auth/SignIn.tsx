@@ -6,8 +6,9 @@ import firebase from 'firebase';
 import { useDispatch } from 'react-redux';
 import { signInUser } from '../../redux/actions/AuthActions';
 import { Redirect } from 'react-router-dom';
+import { Container } from 'react-bootstrap';
 
-const SignUp = () => {
+const SignIn = () => {
     const [dispatch, setDispatch] = useState(useDispatch);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -28,8 +29,9 @@ const SignUp = () => {
     }
 
     return (
-        <div>
+        <Container className="mt-2">
             { redirect ? <Redirect to="/home"></Redirect> : '' }
+            <h4>Sign In</h4>
             <Form onSubmit={handleSubmit}>
                 <Form.Group>
                     <Form.Label>Email address</Form.Label>
@@ -42,9 +44,9 @@ const SignUp = () => {
                 <Button type="submit">Log In</Button>
                 { error ? <Alert variant="danger">{ error }</Alert> : '' }
             </Form>
-        </div>
+        </Container>
     );
 
 }
 
-export default SignUp;
+export default SignIn;
