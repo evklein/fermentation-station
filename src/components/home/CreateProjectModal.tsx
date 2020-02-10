@@ -5,6 +5,7 @@ import { store } from '../../index';
 import { useDispatch } from 'react-redux';
 import { createNewProject } from '../../redux/actions/ProjectActions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { convertUnitsToSeconds } from '../../utility/helper';
 
 const CreateProjectModal = () => {
     const [dispatch, setDispatch] = useState(useDispatch);
@@ -13,12 +14,15 @@ const CreateProjectModal = () => {
     const [notes, setNotes] = useState('');
     const [needsBurp, setBurp] = useState(false);
     const [needsFeed, setFeed] = useState(false);
-    const [hoursBetweenBurps, setHoursBetweenBurps] = useState(0);
-    const [hoursBetweenFeeds, setHoursBetweenFeeds] = useState(0);
     const [feedMaterials, setFeedMaterials] = useState('');
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date('01-01-1900'));
     const [status, setStatus] = useState('Fermentation');
+    const [feedTimeUnits, setFeedTimeUnits] = useState('Hour(s)');
+    const [feedTimeValue, setFeedTimeValue] = useState(0);
+    const [burpTimeUnits, setBurpTimeUnits] = useState('Hour(s)');
+    const [burpTimeValue, setBurpTimeValue] = useState(0);
+
     
     const handleSubmit = () => {
         const project = {
@@ -27,19 +31,29 @@ const CreateProjectModal = () => {
             status: status,
             startDate: startDate,
             doneDate: endDate.toLocaleDateString() !== '1/1/1900' ? endDate : null, // If end date hasn't been set then don't send it.
-            burpHours: hoursBetweenBurps,
-            feedHours: hoursBetweenFeeds,
+            burpTime: needsBurp ? convertUnitsToSeconds(burpTimeValue, burpTimeUnits) : '',
+            lastBurpTime: needsBurp ? Date.now() : '',
+            feedTime: needsFeed ? convertUnitsToSeconds(feedTimeValue, feedTimeUnits) : '',
+            lsatFeedTime: needsFeed ? Date.now() : '',
             feedMaterial: feedMaterials,
             notes: notes,
             done: false,
             documentID: ''
         }
 
+        console.log(project);
+
         firebase.firestore().collection('projects').add(project).then((response) => {
             project.documentID = response.id;
             dispatch(createNewProject(project));
             setModalOpen(false);
+            cleanUpForm();
         });
+    }
+
+    const cleanUpForm = () => {
+        setBurp(false);
+        setFeed(false);
     }
 
     return (
@@ -78,12 +92,25 @@ const CreateProjectModal = () => {
                         <Form.Group>
                             <Form.Check type="checkbox" label="Needs Regular Burping" onChange={(event: React.FormEvent) => { setBurp(!needsBurp)}}></Form.Check>
                             { needsBurp ? 
-                                <Form.Control placeholder="Number of hours between burps" type="number" onChange={(event: React.FormEvent) => { setHoursBetweenBurps((event.currentTarget as any).value) }}></Form.Control> : ''
+                                <div>
+                                    <Form.Control placeholder="Number" type="number" onChange={(event: React.FormEvent) => { setBurpTimeValue((event.currentTarget as any).value) }}></Form.Control>
+                                    <Form.Control as="select" onChange={(event: React.FormEvent) => { setBurpTimeUnits((event.currentTarget as any).value )}}>
+                                        <option>Hour(s)</option>
+                                        <option>Day(s)</option>
+                                        <option>Week(s)</option>
+                                    </Form.Control>
+                                </div>
+                                : ''
                             }
                             <Form.Check type="checkbox" label="Needs Regular Feeding" onChange={(event: React.FormEvent) => { setFeed(!needsFeed)}}></Form.Check>
                             { needsFeed ?
                                 <div>
-                                    <Form.Control placeholder="Number of hours between feeds..." type="number" onChange={(event: React.FormEvent) => { setHoursBetweenFeeds((event.currentTarget as any).value) }}></Form.Control>
+                                    <Form.Control placeholder="Number" type="number" onChange={(event: React.FormEvent) => { setFeedTimeValue((event.currentTarget as any).value) }}></Form.Control>
+                                    <Form.Control as="select" onChange={(event: React.FormEvent) => { setFeedTimeUnits((event.currentTarget as any).value )}}>
+                                        <option>Hour(s)</option>
+                                        <option>Day(s)</option>
+                                        <option>Week(s)</option>
+                                    </Form.Control>
                                     <Form.Control placeholder="Feed material..." onChange={(event: React.FormEvent) => { setFeedMaterials((event.currentTarget as any).value) }}></Form.Control>
                                 </div> : ''
                             }
