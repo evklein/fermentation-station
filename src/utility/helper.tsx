@@ -2,6 +2,8 @@ const SECONDS_IN_HOUR: number = 60 * 60;
 const SECONDS_IN_DAY: number = 60 * 60 * 24;
 const SECONDS_IN_WEEK: number = 60 * 60 * 24 * 7;
 
+export const SECONDS_IN_4_HOURS = 60 * 60 * 4;
+
 export const formatDate = (date: any): string => {
     if (date.seconds === undefined) {
         return new Date(date).toLocaleDateString('en-US');

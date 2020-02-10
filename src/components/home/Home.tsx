@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { store } from '../../index';
 import { Redirect } from 'react-router-dom';
 import firebase from 'firebase';
-import { Button, Card } from 'react-bootstrap';
+import { Button, Card, Alert } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { CREATE_NEW_PROJECT, ProjectState } from '../../redux/types/ProjectTypes';
-import { createNewProject, viewProject, deleteProject } from '../../redux/actions/ProjectActions';
+import { createNewProject, viewProject, deleteProject, updateProject } from '../../redux/actions/ProjectActions';
 import CreateProjectModal from './CreateProjectModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPencilAlt } from '@fortawesome/fontawesome-free-solid';
+import { faPencilAlt, faUtensilSpoon, faBomb, faClock } from '@fortawesome/fontawesome-free-solid';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faBug, faWineBottle, faThermometerEmpty, faBacon, faSkull, faTrash } from '@fortawesome/free-solid-svg-icons';
 import ModifyProjectModal from './ModifyProjectModal';
-import { formatDate } from '../../utility/helper';
+import { formatDate, SECONDS_IN_4_HOURS } from '../../utility/helper';
 
 const Home = () => {
     const [dispatch, setDispatch] = useState(useDispatch);
@@ -70,15 +70,33 @@ const Home = () => {
     const setFeedToNow = (project: firebase.firestore.DocumentData) => {
         project.lastFeedTime = Date.now();
         firebase.firestore().doc('projects/' + project.documentID).set(project).then((response) => {
-            console.log('Success.');
+            dispatch(updateProject(project, project.documentID));
         });
     }
 
     const setBurpToNow = (project: firebase.firestore.DocumentData) => {
         project.lastBurpTime = Date.now();
         firebase.firestore().doc('projects/' + project.documentID).set(project).then((response) => {
-            console.log('Success.');
+            dispatch(updateProject(project, project.documentID));
         });
+    }
+
+    const showBurpAlert = (project: firebase.firestore.DocumentData): string => {
+        if (project.lastBurpTime === 0) return '';
+        else if (Date.now() - project.lastBurpTime > project.burpTime - SECONDS_IN_4_HOURS) {
+            return 'This project should be burped soon to prevent explosions.'
+        }
+
+        return ''; 
+    }
+
+    const showFeedAlert = (project:firebase.firestore.DocumentData): string => {
+        if (project.lastFeedTime === 0) return '';
+        else if (Date.now() - project.lastFeedTime > project.feedTime - SECONDS_IN_4_HOURS) {
+            return 'This project should be fed soon.'
+        }
+
+        return '';
     }
 
     return (
@@ -114,8 +132,22 @@ const Home = () => {
                                     Notes: { project.notes }
                                 </div> : ''
                             }
-                            { project.feedHours > 0 ? <Button variant="outline-success" onClick={() => { setFeedToNow(project) }}>Fed Today</Button> : '' }
-                            { project.burpHours > 0 ? <Button variant="outline-primary" onClick={() => { setBurpToNow(project) }}>Burped Today</Button> : '' }
+                            { showFeedAlert(project) || showBurpAlert(project) ?
+                                <Alert variant="warning">
+                                    { showBurpAlert(project) ?
+                                        <div>
+                                            <FontAwesomeIcon icon={faBomb as IconProp} /> {showBurpAlert(project)}
+                                        </div>
+                                    : ''}
+                                    { showFeedAlert(project) ?
+                                        <div>
+                                            <FontAwesomeIcon icon={faClock as IconProp} /> {showFeedAlert(project)}
+                                        </div>
+                                    : ''}
+                                </Alert> : ''
+                            }
+                            { project.burpTime > 0 ? <Button variant="outline-primary" onClick={() => { setBurpToNow(project) }}>Burped Today</Button> : '' }
+                            { project.feedTime > 0 ? <Button variant="outline-success" onClick={() => { setFeedToNow(project) }}>Fed Today</Button> : '' }
                         </Card.Text>
                     </Card.Body>
                 </Card>
