@@ -67,6 +67,20 @@ const Home = () => {
         })
     }
 
+    const setFeedToNow = (project: firebase.firestore.DocumentData) => {
+        project.lastFeedTime = Date.now();
+        firebase.firestore().doc('projects/' + project.documentID).set(project).then((response) => {
+            console.log('Success.');
+        });
+    }
+
+    const setBurpToNow = (project: firebase.firestore.DocumentData) => {
+        project.lastBurpTime = Date.now();
+        firebase.firestore().doc('projects/' + project.documentID).set(project).then((response) => {
+            console.log('Success.');
+        });
+    }
+
     return (
         <div>
             { !store.getState().auth.isLoggedIn ? <Redirect to="/sign-in" /> : '' }
@@ -100,8 +114,8 @@ const Home = () => {
                                     Notes: { project.notes }
                                 </div> : ''
                             }
-                            { project.feedHours > 0 ? <Button variant="outline-success">Fed Today</Button> : '' }
-                            { project.burpHours > 0 ? <Button variant="outline-primary">Burped Today</Button> : '' }
+                            { project.feedHours > 0 ? <Button variant="outline-success" onClick={() => { setFeedToNow(project) }}>Fed Today</Button> : '' }
+                            { project.burpHours > 0 ? <Button variant="outline-primary" onClick={() => { setBurpToNow(project) }}>Burped Today</Button> : '' }
                         </Card.Text>
                     </Card.Body>
                 </Card>
