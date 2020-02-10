@@ -7,6 +7,7 @@ import { createNewProject, updateProject } from '../../redux/actions/ProjectActi
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt, faCheck } from '@fortawesome/fontawesome-free-solid';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { formatDate } from '../../utility/helper';
 
 const ModifyProjectModal = () => {
     const [dispatch, setDispatch] = useState(useDispatch);
@@ -18,8 +19,8 @@ const ModifyProjectModal = () => {
     const [hoursBetweenBurps, setHoursBetweenBurps] = useState(0);
     const [hoursBetweenFeeds, setHoursBetweenFeeds] = useState(0);
     const [feedMaterials, setFeedMaterials] = useState('');
-    // const [startDate, setStartDate] = useState(project.);
-    // const [endDate, setEndDate] = useState(new Date('01/01/1900'));
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
     const [status, setStatus] = useState('');
     const [done, setDone] = useState(false);
 
@@ -37,11 +38,11 @@ const ModifyProjectModal = () => {
             setHoursBetweenFeeds(currentProject.feedHours);
             setFeedMaterials(currentProject.feedMaterial);
             setDone(currentProject.done);
-            // TODO: DATES
+            setStartDate(currentProject.startDate);
+            setEndDate(currentProject.doneDate);
             setModalOpen(true);
         }
     });
-    
     
     const handleSubmit = () => {
         const documentID = store.getState().projects.currentlyViewedProject.documentID;
@@ -50,8 +51,8 @@ const ModifyProjectModal = () => {
             name: projectName,
             owner: store.getState().auth.email,
             status: status,
-            // startDate: startDate,
-            // doneDate: endDate,
+            startDate: startDate,
+            doneDate: endDate ? endDate : null,
             burpHours: hoursBetweenBurps,
             feedHours: hoursBetweenFeeds,
             feedMaterial: feedMaterials,
@@ -89,12 +90,11 @@ const ModifyProjectModal = () => {
                             </Form.Control>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label>Start Date</Form.Label>
-                            <Form.Control type="date"></Form.Control>
+                            <Form.Label>Start Date: {formatDate(startDate)}</Form.Label>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label>End Date</Form.Label>
-                            <Form.Control type="date" placeholder="(Optional)"></Form.Control>
+                            <Form.Label>End Date (Optional)</Form.Label>
+                            <Form.Control type="text" defaultValue={endDate ? formatDate(endDate) : ''} onChange={(event: React.FormEvent) => { setEndDate((event.currentTarget as any).value) }}></Form.Control>
                         </Form.Group>
                         <Form.Group>
                             <Form.Check checked={needsBurp} type="checkbox" label="Needs Regular Burping" onChange={(event: React.FormEvent) => { setBurp(!needsBurp)}}></Form.Check>

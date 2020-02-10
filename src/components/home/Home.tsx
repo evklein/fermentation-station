@@ -12,6 +12,7 @@ import { faPencilAlt } from '@fortawesome/fontawesome-free-solid';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faBug, faWineBottle, faThermometerEmpty, faBacon, faSkull, faTrash } from '@fortawesome/free-solid-svg-icons';
 import ModifyProjectModal from './ModifyProjectModal';
+import { formatDate } from '../../utility/helper';
 
 const Home = () => {
     const [dispatch, setDispatch] = useState(useDispatch);
@@ -39,10 +40,7 @@ const Home = () => {
         setUserProjects(store.getState().projects.userProjects);
     })
 
-    const formatDate = (seconds: number) => {
-        return new Date(seconds * 1000).toLocaleDateString('en-US') + ' ' + 
-                new Date(seconds * 10000).toLocaleTimeString('en-US');
-    }
+
 
     const getStatusIcon = (project: firebase.firestore.DocumentData): IconProp => {
         switch (project.status) {
@@ -86,12 +84,12 @@ const Home = () => {
                         <Card.Text>
                             <FontAwesomeIcon icon={getStatusIcon(project)}></FontAwesomeIcon>
                             { project.status } <br/>
-                            {/* Started: { formatDate(project.startDate.seconds) } <br />
+                            Started: { formatDate(project.startDate) } <br />
                             { project.doneDate !== null ? 
                                 <div>
-                                    Done by: { formatDate(project.doneDate.seconds) }
+                                    Done by: { formatDate(project.doneDate) }
                                 </div> : ''
-                            } */}
+                            }
                             { project.feedMaterial ?
                                 <div>
                                     Feed Material: { project.feedMaterial } 

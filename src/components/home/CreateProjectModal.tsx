@@ -17,7 +17,7 @@ const CreateProjectModal = () => {
     const [hoursBetweenFeeds, setHoursBetweenFeeds] = useState(0);
     const [feedMaterials, setFeedMaterials] = useState('');
     const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date('01/01/1900'));
+    const [endDate, setEndDate] = useState(new Date('01-01-1900'));
     const [status, setStatus] = useState('Fermentation');
     
     const handleSubmit = () => {
@@ -26,7 +26,7 @@ const CreateProjectModal = () => {
             owner: store.getState().auth.email,
             status: status,
             startDate: startDate,
-            doneDate: endDate,
+            doneDate: endDate.toLocaleDateString() !== '1/1/1900' ? endDate : null, // If end date hasn't been set then don't send it.
             burpHours: hoursBetweenBurps,
             feedHours: hoursBetweenFeeds,
             feedMaterial: feedMaterials,
@@ -69,11 +69,11 @@ const CreateProjectModal = () => {
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Start Date</Form.Label>
-                            <Form.Control type="date" onChange={(event: React.FormEvent) => { setStartDate((event.target as any).value)}}></Form.Control>
+                            <Form.Control type="datetime-local" onChange={(event: React.FormEvent) => { setStartDate(new Date((event.target as any).value)) }}></Form.Control>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label>End Date</Form.Label>
-                            <Form.Control type="date" placeholder="(Optional)"></Form.Control>
+                            <Form.Label>End Date (Optional)</Form.Label>
+                            <Form.Control type="datetime-local" onChange={(event: React.FormEvent) => { setEndDate(new Date((event.target as any).value)) }}></Form.Control>
                         </Form.Group>
                         <Form.Group>
                             <Form.Check type="checkbox" label="Needs Regular Burping" onChange={(event: React.FormEvent) => { setBurp(!needsBurp)}}></Form.Check>
@@ -92,11 +92,6 @@ const CreateProjectModal = () => {
                             <Form.Control as="textarea" placeholder="Additional notes..." onChange={(event: React.FormEvent) => { setNotes((event.currentTarget as any).value )}} />
                         </Form.Group>
                     </Form>
-                    {/* <FormControl placeholder="Project name"></FormControl>
-                    // For dates: https://www.npmjs.com/package/react-bootstrap-date-picker
-                    <FormControl placeholder="Additional notes..."></FormControl>
-                    <Form.Check>Needs Regular Feeding</Form.Check>
-                    <Form.Check>Needs Regular Burping</Form.Check> */}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" type="submit" onClick={() => { setModalOpen(false) }}>Close</Button>
