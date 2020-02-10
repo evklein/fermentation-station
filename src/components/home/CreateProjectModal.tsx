@@ -6,6 +6,8 @@ import { useDispatch } from 'react-redux';
 import { createNewProject } from '../../redux/actions/ProjectActions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { convertUnitsToSeconds } from '../../utility/helper';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 const CreateProjectModal = () => {
     const [dispatch, setDispatch] = useState(useDispatch);
@@ -58,11 +60,10 @@ const CreateProjectModal = () => {
 
     return (
         <div>
-            <Card style={{width: '18rem'}} onClick={() => { setModalOpen(true) }}>
-                <Card.Body>
-                    <Card.Text>Create New Project +</Card.Text>
-                </Card.Body>
-            </Card>
+            <Button variant="success" className="mt-2" onClick={() => { setModalOpen(true) }}>
+                <FontAwesomeIcon icon={faPlus as IconProp}></FontAwesomeIcon> 
+                 Create New Project
+            </Button>
             <Modal show={modalOpen}>
                 <Modal.Header>
                     <Modal.Title>Create a New Project</Modal.Title>
@@ -79,6 +80,7 @@ const CreateProjectModal = () => {
                                 <option>Cold Rest</option>
                                 <option>Curing</option>
                                 <option>Dead</option>
+                                <option>Done</option>
                             </Form.Control>
                         </Form.Group>
                         <Form.Group>

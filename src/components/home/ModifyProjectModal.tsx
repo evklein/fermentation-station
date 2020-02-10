@@ -101,6 +101,7 @@ const ModifyProjectModal = () => {
                                 <option>Cold Rest</option>
                                 <option>Curing</option>
                                 <option>Dead</option>
+                                <option>Done</option>
                             </Form.Control>
                         </Form.Group>
                         <Form.Group>
