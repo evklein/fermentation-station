@@ -1,4 +1,4 @@
-import { Project, ProjectAction, CREATE_NEW_PROJECT, UPDATE_PROJECT, DELETE_PROJECT, VIEW_PROJECT } from '../types/ProjectTypes';
+import { Project, ProjectAction, CREATE_NEW_PROJECT, UPDATE_PROJECT, DELETE_PROJECT, VIEW_PROJECT, DELETE_ALL } from '../types/ProjectTypes';
 
 export const createNewProject = (project: firebase.firestore.DocumentData): ProjectAction => {
     return {
@@ -28,6 +28,14 @@ export const viewProject = (project: firebase.firestore.DocumentData): ProjectAc
     return {
         type: VIEW_PROJECT,
         payload: project,
+        documentID: ''
+    }
+}
+
+export const deleteAll = (): ProjectAction => {
+    return {
+        type: DELETE_ALL,
+        payload: {},
         documentID: ''
     }
 }

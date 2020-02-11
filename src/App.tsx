@@ -14,6 +14,7 @@ import { faBug } from '@fortawesome/free-solid-svg-icons';
 import { store } from '.';
 import { useDispatch } from 'react-redux';
 import { signOutUser } from './redux/actions/AuthActions';
+import { deleteAll } from './redux/actions/ProjectActions';
 
 const App = () => {
   const [dispatch, setDispatch] = useState(useDispatch);
@@ -29,6 +30,7 @@ const App = () => {
 
   const logout = () => {
     dispatch(signOutUser(store.getState().auth.email));
+    dispatch(deleteAll());
     return <Redirect to="/sign-in"></Redirect>
   }
 

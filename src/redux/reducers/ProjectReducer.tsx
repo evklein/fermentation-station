@@ -1,5 +1,5 @@
 
-import { Project, ProjectAction, CREATE_NEW_PROJECT, UPDATE_PROJECT, DELETE_PROJECT, VIEW_PROJECT, ProjectState } from '../types/ProjectTypes';
+import { Project, ProjectAction, CREATE_NEW_PROJECT, UPDATE_PROJECT, DELETE_PROJECT, VIEW_PROJECT, ProjectState, DELETE_ALL } from '../types/ProjectTypes';
 
 const defaultProjectState = {
     userProjects: [] as firebase.firestore.DocumentData[],
@@ -30,6 +30,12 @@ const ProjectReducer = (state = defaultProjectState, action: ProjectAction) => {
             return {
                 ...state,
                 currentlyViewedProject: action.payload
+            }
+        case DELETE_ALL:
+            return {
+                ...state,
+                userProjects: [],
+                currentlyViewedProject: {}
             }
         default:
             return {

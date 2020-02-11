@@ -3,6 +3,7 @@ export const CREATE_NEW_PROJECT: string = "CREATE_NEW_PROJECT";
 export const UPDATE_PROJECT: string = "UPDATE_PROJECT";
 export const DELETE_PROJECT: string = "DELETE_PROJECT";
 export const VIEW_PROJECT: string = "VIEW_PROJECT";
+export const DELETE_ALL: string = "DELETE_ALL";
 
 export interface Project {
     name: string
