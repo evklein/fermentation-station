@@ -109,7 +109,7 @@ const ModifyProjectModal = () => {
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>End Date (Optional)</Form.Label>
-                            <Form.Control type="text" defaultValue={endDate ? formatDate(endDate) : ''} onChange={(event: React.FormEvent) => { setEndDate((event.currentTarget as any).value) }}></Form.Control>
+                            <Form.Control type="date" defaultValue={endDate ? formatDate(endDate) : ''} onChange={(event: React.FormEvent) => { setEndDate((event.currentTarget as any).value) }}></Form.Control>
                         </Form.Group>
                         <Form.Group>
                             <Form.Check type="checkbox" defaultChecked={needsBurp} label="Needs Regular Burping" onChange={(event: React.FormEvent) => { setBurp(!needsBurp)}}></Form.Check>
@@ -144,13 +144,6 @@ const ModifyProjectModal = () => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" type="submit" onClick={() => { setModalOpen(false) }}>Close</Button>
-                    <Button variant="danger" onClick={() => { setDone(!done)}}>
-                        { done ? 'Mark Un-done' : 
-                        <span>
-                            Mark Done <FontAwesomeIcon icon={faCheck as IconProp}></FontAwesomeIcon>
-                        </span>
-                         }
-                        </Button>
                     <Button variant="success" onClick={handleSubmit}>Update Project</Button>
                 </Modal.Footer>
             </Modal>

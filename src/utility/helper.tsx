@@ -6,10 +6,10 @@ export const SECONDS_IN_4_HOURS = 60 * 60 * 4;
 
 export const formatDate = (date: any): string => {
     if (date.seconds === undefined) {
-        return new Date(date).toLocaleDateString('en-US');
+        return new Date(date).toLocaleDateString()
     }
 
-    return new Date(date.seconds * 1000).toLocaleDateString('en-US');
+    return new Date(date.seconds * 1000).toLocaleDateString();
 }
 
 export const convertUnitsToSeconds = (value: number, unit: string): number => {

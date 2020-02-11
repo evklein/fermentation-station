@@ -61,7 +61,7 @@ const CreateProjectModal = () => {
     return (
         <div>
             <Button variant="success" className="mt-2" onClick={() => { setModalOpen(true) }}>
-                <FontAwesomeIcon icon={faPlus as IconProp}></FontAwesomeIcon> 
+                <FontAwesomeIcon icon={faPlus as IconProp}></FontAwesomeIcon>{' '}
                  Create New Project
             </Button>
             <Modal show={modalOpen}>
@@ -85,11 +85,11 @@ const CreateProjectModal = () => {
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Start Date</Form.Label>
-                            <Form.Control type="datetime-local" onChange={(event: React.FormEvent) => { setStartDate(new Date((event.target as any).value)) }}></Form.Control>
+                            <Form.Control type="date" onChange={(event: React.FormEvent) => { setStartDate(new Date((event.target as any).value)) }}></Form.Control>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>End Date (Optional)</Form.Label>
-                            <Form.Control type="datetime-local" onChange={(event: React.FormEvent) => { setEndDate(new Date((event.target as any).value)) }}></Form.Control>
+                            <Form.Control type="date" onChange={(event: React.FormEvent) => { setEndDate(new Date((event.target as any).value)) }}></Form.Control>
                         </Form.Group>
                         <Form.Group>
                             <Form.Check type="checkbox" label="Needs Regular Burping" onChange={(event: React.FormEvent) => { setBurp(!needsBurp)}}></Form.Check>

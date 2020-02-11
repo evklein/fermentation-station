@@ -10,7 +10,7 @@ import CreateProjectModal from './CreateProjectModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt, faUtensilSpoon, faBomb, faClock } from '@fortawesome/fontawesome-free-solid';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { faBug, faWineBottle, faThermometerEmpty, faBacon, faSkull, faTrash, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faBug, faWineBottle, faThermometerEmpty, faBacon, faSkull, faTrash, faCheck, faPlus, faDrumstickBite, faStickyNote, faExclamation } from '@fortawesome/free-solid-svg-icons';
 import ModifyProjectModal from './ModifyProjectModal';
 import { formatDate, SECONDS_IN_4_HOURS } from '../../utility/helper';
 
@@ -93,12 +93,23 @@ const Home = () => {
         return ''; 
     }
 
-    const showFeedAlert = (project:firebase.firestore.DocumentData): string => {
+    const showFeedAlert = (project: firebase.firestore.DocumentData): string => {
         if (project.lastFeedTime === 0) return '';
         else if (Date.now() - project.lastFeedTime > project.feedTime - SECONDS_IN_4_HOURS) {
             return 'This project should be fed soon.'
         }
 
+        return '';
+    }
+
+    const showTimeAlert = (project: firebase.firestore.DocumentData): string => {
+        if (project.doneDate) {
+            console.log('Epoch: ' + Date.now() + ', ' + new Date(project.doneDate).getSeconds())
+            if (Date.now() >= new Date(project.doneDate).getSeconds() - SECONDS_IN_4_HOURS) {
+                return 'This project is possibly done.'
+            }
+        }
+        
         return '';
     }
 
@@ -109,7 +120,7 @@ const Home = () => {
                 <CreateProjectModal></CreateProjectModal>
                 <label>
                     <input className="mt-4 ml-2" type="checkbox" checked={finishedProjectsHidden} onChange={() => setFinishedProjectsHidden(!finishedProjectsHidden)}/>
-                    Hide finished projects
+                    {' '}Hide finished projects
                 </label>
             </Row>
             <Row className="ml-2">
@@ -125,7 +136,7 @@ const Home = () => {
                             <Card.Body>
                                 <Card.Title>
                                     { project.status === 'Done' ? <FontAwesomeIcon icon={faCheck as IconProp}></FontAwesomeIcon> : ''}
-                                    { project.name }
+                                    {' '}{ project.name }
                                     <ButtonGroup className="float-right">
                                         <Button variant="info" onClick={() => editProject(project)}>
                                             <FontAwesomeIcon icon={faPencilAlt as IconProp}></FontAwesomeIcon>
@@ -137,25 +148,30 @@ const Home = () => {
                                 </Card.Title>
                                 <Card.Text>
                                     <FontAwesomeIcon icon={getStatusIcon(project)}></FontAwesomeIcon>
-                                    { project.status } <br/>
+                                    {' '}{ project.status } <br/>
 
-                                    Started: { formatDate(project.startDate) } <br />
+                                    <FontAwesomeIcon icon={faPlus as IconProp}></FontAwesomeIcon>
+                                    {' '}<b>Started</b> { formatDate(project.startDate) } <br />
+                                    
                                     { project.doneDate !== null ? 
                                         <div>
-                                            Done by: { formatDate(project.doneDate) }
+                                            <FontAwesomeIcon icon={faCheck as IconProp}></FontAwesomeIcon>
+                                            {' '}<b>Done</b> { formatDate(project.doneDate) }
                                         </div> : ''
                                     }
                                     { project.feedMaterial ?
                                         <div>
-                                            Feed Material: { project.feedMaterial } 
+                                            <FontAwesomeIcon icon={faDrumstickBite as IconProp}></FontAwesomeIcon>
+                                            {' '}<b>Food:</b> { project.feedMaterial } 
                                         </div> : ''
                                     }
                                     { project.notes ? 
                                         <div>
-                                            Notes: { project.notes }
+                                            <FontAwesomeIcon icon={faStickyNote as IconProp}></FontAwesomeIcon>
+                                            {' '}<b>Notes:</b> { project.notes }
                                         </div> : ''
                                     }
-                                    { showFeedAlert(project) || showBurpAlert(project) ?
+                                    { (showFeedAlert(project) || showBurpAlert(project) || showTimeAlert(project)) && project.status !== 'Done' ?
                                         <Alert variant="warning">
                                             { showBurpAlert(project) ?
                                                 <div>
@@ -167,12 +183,19 @@ const Home = () => {
                                                     <FontAwesomeIcon icon={faClock as IconProp} /> {showFeedAlert(project)}
                                                 </div>
                                             : ''}
+                                            { showTimeAlert(project) ?
+                                                <div>
+                                                    <FontAwesomeIcon icon={faExclamation as IconProp} /> {showTimeAlert(project)}
+                                                </div>
+                                            : ''}
                                         </Alert> : ''
                                     }
-                                    <ButtonGroup>
-                                        { project.burpTime > 0 ? <Button variant="outline-primary" onClick={() => { setBurpToNow(project) }}>Burped Today</Button> : '' }
-                                        { project.feedTime > 0 ? <Button variant="outline-success" onClick={() => { setFeedToNow(project) }}>Fed Today</Button> : '' }
-                                    </ButtonGroup>
+                                    { project.status !== 'Done' ?
+                                        <ButtonGroup className="mt-1">
+                                            { project.burpTime > 0 ? <Button variant="outline-primary" onClick={() => { setBurpToNow(project) }}>Burped Today</Button> : '' }
+                                            { project.feedTime > 0 ? <Button variant="outline-success" onClick={() => { setFeedToNow(project) }}>Fed Today</Button> : '' }
+                                        </ButtonGroup> : ''
+                                    }
                                     </Card.Text>
                             </Card.Body>
                         </Card> : ''}
