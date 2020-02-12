@@ -1,12 +1,12 @@
 import React, { FormEvent, useState, useEffect } from 'react';
-import { Container, Row, Col, Card } from 'react-bootstrap';
+import { Container, Row, Col, Card, ButtonGroup, Button } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { store } from '../..';
 import { Redirect } from 'react-router-dom';
-import { deleteAllRecipes, createNewRecipe } from '../../redux/actions/RecipeActions';
+import { deleteAllRecipes, createNewRecipe, deleteRecipe } from '../../redux/actions/RecipeActions';
 import CreateRecipeModal from './CreateRecipeModal';
 import firebase from 'firebase';
-import { faClock, faList, faAngleDown, faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { faClock, faList, faAngleDown, faAngleRight, faPencilAlt, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
@@ -45,6 +45,16 @@ const Recipes = () => {
         return splitArray.slice(0, splitArray.length - 1);
     }
 
+    const editRecipe = (event: React.FormEvent, recipe: firebase.firestore.DocumentData) => {
+        event.stopPropagation();
+    }
+
+    const deleteRecipeItem = (recipe: firebase.firestore.DocumentData) => {
+        firebase.firestore().doc('recipes/' + recipe.documentID).delete().then((response) => {
+            dispatch(deleteRecipe(recipe, recipe.documentID));
+        })
+    }
+
     store.subscribe(() => {
         setUserRecipes(store.getState().recipes.userRecipes);
     });
@@ -71,6 +81,14 @@ const Recipes = () => {
                                     <FontAwesomeIcon icon={faAngleRight as IconProp}></FontAwesomeIcon>
                                 }
                                 {' '}{ recipe.name }
+                                    <ButtonGroup className="float-right">
+                                        <Button variant="info" onClick={(event: React.FormEvent) => editRecipe(event, recipe)}>
+                                            <FontAwesomeIcon icon={faPencilAlt as IconProp}></FontAwesomeIcon>
+                                        </Button>
+                                        <Button variant="danger" onClick={() => deleteRecipeItem(recipe)}>
+                                            <FontAwesomeIcon icon={faTrash as IconProp}></FontAwesomeIcon>
+                                        </Button>
+                                    </ButtonGroup>
                             </Card.Title>
                             <Card.Text>
                                 <FontAwesomeIcon icon={faClock as IconProp}></FontAwesomeIcon>
