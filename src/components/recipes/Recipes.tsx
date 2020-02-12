@@ -6,10 +6,14 @@ import { Redirect } from 'react-router-dom';
 import { deleteAllRecipes, createNewRecipe } from '../../redux/actions/RecipeActions';
 import CreateRecipeModal from './CreateRecipeModal';
 import firebase from 'firebase';
+import { faClock, faList, faAngleDown, faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 const Recipes = () => {
     const [dispatch, setDispatch] = useState(useDispatch);
     const [userRecipes, setUserRecipes] = useState([] as firebase.firestore.DocumentData[]);
+    const [openRecipe, setOpenRecipe] = useState({} as firebase.firestore.DocumentData);
 
     useEffect(() => {
         dispatch(deleteAllRecipes());
@@ -28,9 +32,22 @@ const Recipes = () => {
         })
     }
 
+    const changeOpenRecipe = (recipe: firebase.firestore.DocumentData) => {
+        if (openRecipe.documentID === recipe.documentID) {
+            setOpenRecipe({});
+        } else {
+            setOpenRecipe(recipe);
+        }
+    }
+
+    const splitIngredientsIntoList = (ingredientsString: string) => {
+        let splitArray = ingredientsString.split(':::');
+        return splitArray.slice(0, splitArray.length - 1);
+    }
+
     store.subscribe(() => {
         setUserRecipes(store.getState().recipes.userRecipes);
-    })
+    });
 
     return (
         <Container fluid>
@@ -46,9 +63,36 @@ const Recipes = () => {
             <Row noGutters>
                 { userRecipes.map((recipe: firebase.firestore.DocumentData) => 
                 <Col>
-                    <Card style={{ width: '18rem' }} className="mt-2 mx-2 mb-2">
+                    <Card style={{ width: '50rem' }} className="mt-2 mx-2 mb-2" onClick={() => changeOpenRecipe(recipe)}>
                         <Card.Body>
-                            <Card.Title>{ recipe.name }</Card.Title>
+                            <Card.Title>
+                                { openRecipe.documentID === recipe.documentID ? 
+                                    <FontAwesomeIcon icon={faAngleDown as IconProp}></FontAwesomeIcon> :
+                                    <FontAwesomeIcon icon={faAngleRight as IconProp}></FontAwesomeIcon>
+                                }
+                                {' '}{ recipe.name }
+                            </Card.Title>
+                            <Card.Text>
+                                <FontAwesomeIcon icon={faClock as IconProp}></FontAwesomeIcon>
+                                {' '}{ recipe.time ? recipe.time : 'N/A' }<br/>
+
+                                <FontAwesomeIcon icon={faList as IconProp}></FontAwesomeIcon>
+                                {' '}{ recipe.ingredientCount ? <span>{recipe.ingredientCount} ingredient(s) needed</span> : 'No ingredients needed' }<br/>
+
+                                { openRecipe.documentID === recipe.documentID ?
+                                    <div>
+                                        { recipe.ingredientCount ? 
+                                            <ul>
+                                                { splitIngredientsIntoList(recipe.ingredients).map((ingredient: string) => 
+                                                    <li>{ ingredient }</li>
+                                                )}
+                                            </ul>: ''
+                                        }
+                                        <h6>Instructions</h6>
+                                        { recipe.instructions ? recipe.instructions : 'No instructions found.' }
+                                    </div> : ''
+                                }
+                            </Card.Text>
                         </Card.Body>
                     </Card>
                 </Col>

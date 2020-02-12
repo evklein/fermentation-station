@@ -42,7 +42,7 @@ const SignIn = () => {
                     <Form.Control type="password" placeholder="Enter password" onChange={(event: React.FormEvent) => { setPassword((event.currentTarget as any).value )}} />
                 </Form.Group>
                 <Button type="submit">Log In</Button>
-                { error ? <Alert variant="danger">{ error }</Alert> : '' }
+                { error ? <Alert className="mt-2" variant="danger">{ error }</Alert> : '' }
             </Form>
         </Container>
     );

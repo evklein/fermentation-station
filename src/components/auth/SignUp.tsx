@@ -66,7 +66,7 @@ const SignUp = () => {
                     <Form.Control type="password" placeholder="Confirm Password" onChange={(event: React.FormEvent) => { setConfirmPassword((event.currentTarget as any).value )}} />
                 </Form.Group>
                 <Button type="submit">Sign Up</Button>
-                { error ? <Alert variant="danger">{ error }</Alert> : '' }
+                { error ? <Alert className="mt-2" variant="danger">{ error }</Alert> : '' }
             </Form>
         </Container>
     );

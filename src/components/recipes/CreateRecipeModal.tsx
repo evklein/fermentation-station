@@ -13,6 +13,7 @@ const CreateRecipeModal = () => {
     const [dispatch, setDispatch] = useState(useDispatch);
     const [modalOpen, setModalOpen] = useState(false);
     const [recipeName, setRecipeName] = useState('');
+    const [recipeTime, setRecipeTime] = useState('');
     const [numberOfIngredients, setNumberOfIngredients] = useState(0);
     const [ingredients, setIngredients] = useState([] as string[]);
     const [hiddenIngredients, setHiddenIngredients] = useState([] as number[]);
@@ -20,15 +21,19 @@ const CreateRecipeModal = () => {
 
     const handleSubmit = () => {
         let ingredientString = '';
+        let ingredientCount = 0;
         ingredients.forEach((ingredient, i) => {
             if (!hiddenIngredients.includes(i)) {
                 ingredientString += ingredient + ':::';
+                ingredientCount++;
             }
         });
 
         const recipe = {
             name: recipeName,
+            time: recipeTime,
             owner: store.getState().auth.email,
+            ingredientCount: ingredientCount,
             ingredients: ingredientString,
             instructions: instructions,
             documentID: ''
@@ -66,6 +71,10 @@ const CreateRecipeModal = () => {
                         <Form.Group>
                             <Form.Label><b>Recipe Name</b></Form.Label>
                             <Form.Control placeholder="Enter recipe name..." onChange={(event: React.FormEvent) => { setRecipeName((event.target as any).value) }}></Form.Control>
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label><b>Time Required</b></Form.Label>
+                            <Form.Control placeholder="Enter amount of time..." onChange={(event: React.FormEvent) => { setRecipeTime((event.target as any).value) }}></Form.Control>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label><b>Ingredients</b></Form.Label><br/>
