@@ -68,7 +68,7 @@ const Home = () => {
     const deleteItem = (project: firebase.firestore.DocumentData) => {
         firebase.firestore().doc('projects/' + project.documentID).delete().then((response) => {
             dispatch(deleteProject(project, project.documentID));
-        })
+        });
     }
 
     const setFeedToNow = (project: firebase.firestore.DocumentData) => {

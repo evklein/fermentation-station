@@ -48,3 +48,12 @@ export const convertSecondsToProperFormat = (seconds: number): { value: number, 
         }
     }
 }
+
+export const splitIngredientsIntoList = (ingredientsString: string) => {
+    if (ingredientsString) {
+        let splitArray = ingredientsString.split(':::');
+        return splitArray.slice(0, splitArray.length - 1);
+    }
+
+    return [];
+}

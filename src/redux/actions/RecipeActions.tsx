@@ -1,5 +1,5 @@
 
-import { CREATE_NEW_RECIPE, RecipeAction, UPDATE_RECIPE, DELETE_RECIPE, DELETE_ALL_RECIPES } from '../types/RecipeTypes';
+import { CREATE_NEW_RECIPE, RecipeAction, UPDATE_RECIPE, DELETE_RECIPE, DELETE_ALL_RECIPES, VIEW_RECIPE } from '../types/RecipeTypes';
 import { ProjectAction } from '../types/ProjectTypes';
 
 export const createNewRecipe = (recipe: firebase.firestore.DocumentData): RecipeAction => {
@@ -28,7 +28,7 @@ export const deleteRecipe = (recipe: firebase.firestore.DocumentData, documentID
 
 export const viewRecipe = (recipe: firebase.firestore.DocumentData): RecipeAction => {
     return {
-        type: UPDATE_RECIPE,
+        type: VIEW_RECIPE,
         payload: recipe,
         documentID: ''
     }

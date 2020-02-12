@@ -3,12 +3,15 @@ import { Container, Row, Col, Card, ButtonGroup, Button } from 'react-bootstrap'
 import { useDispatch } from 'react-redux';
 import { store } from '../..';
 import { Redirect } from 'react-router-dom';
-import { deleteAllRecipes, createNewRecipe, deleteRecipe } from '../../redux/actions/RecipeActions';
+import { deleteAllRecipes, createNewRecipe, deleteRecipe, viewRecipe } from '../../redux/actions/RecipeActions';
 import CreateRecipeModal from './CreateRecipeModal';
 import firebase from 'firebase';
 import { faClock, faList, faAngleDown, faAngleRight, faPencilAlt, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import ModifyProjectModal from '../home/ModifyProjectModal';
+import ModifyRecipeModal from './ModifyRecipeModal';
+import { splitIngredientsIntoList } from '../../utility/helper';
 
 const Recipes = () => {
     const [dispatch, setDispatch] = useState(useDispatch);
@@ -40,24 +43,25 @@ const Recipes = () => {
         }
     }
 
-    const splitIngredientsIntoList = (ingredientsString: string) => {
-        let splitArray = ingredientsString.split(':::');
-        return splitArray.slice(0, splitArray.length - 1);
-    }
-
     const editRecipe = (event: React.FormEvent, recipe: firebase.firestore.DocumentData) => {
         event.stopPropagation();
+        event.preventDefault();
+        
+        dispatch(viewRecipe(recipe));
     }
 
-    const deleteRecipeItem = (recipe: firebase.firestore.DocumentData) => {
+    const deleteRecipeItem = (event: React.FormEvent, recipe: firebase.firestore.DocumentData) => {
+        event.stopPropagation();
+        event.preventDefault();
         firebase.firestore().doc('recipes/' + recipe.documentID).delete().then((response) => {
             dispatch(deleteRecipe(recipe, recipe.documentID));
-        })
+        });
     }
 
     store.subscribe(() => {
         setUserRecipes(store.getState().recipes.userRecipes);
     });
+
 
     return (
         <Container fluid>
@@ -85,7 +89,7 @@ const Recipes = () => {
                                         <Button variant="info" onClick={(event: React.FormEvent) => editRecipe(event, recipe)}>
                                             <FontAwesomeIcon icon={faPencilAlt as IconProp}></FontAwesomeIcon>
                                         </Button>
-                                        <Button variant="danger" onClick={() => deleteRecipeItem(recipe)}>
+                                        <Button variant="danger" onClick={(event: React.FormEvent) => deleteRecipeItem(event, recipe)}>
                                             <FontAwesomeIcon icon={faTrash as IconProp}></FontAwesomeIcon>
                                         </Button>
                                     </ButtonGroup>
@@ -116,6 +120,7 @@ const Recipes = () => {
                 </Col>
                 )}
             </Row>
+            <ModifyRecipeModal></ModifyRecipeModal>
         </Container>
     )
 }

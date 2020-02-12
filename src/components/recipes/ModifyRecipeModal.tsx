@@ -7,9 +7,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { store } from "../..";
 import firebase from "firebase";
-import { createNewRecipe } from '../../redux/actions/RecipeActions';
+import { createNewRecipe, updateRecipe } from '../../redux/actions/RecipeActions';
+import { updateProject } from "../../redux/actions/ProjectActions";
+import { splitIngredientsIntoList } from '../../utility/helper';
 
-const CreateRecipeModal = () => {
+const ModifyRecipeModal = () => {
     const [dispatch, setDispatch] = useState(useDispatch);
     const [modalOpen, setModalOpen] = useState(false);
     const [recipeName, setRecipeName] = useState('');
@@ -18,6 +20,24 @@ const CreateRecipeModal = () => {
     const [ingredients, setIngredients] = useState([] as string[]);
     const [hiddenIngredients, setHiddenIngredients] = useState([] as number[]);
     const [instructions, setInstructions] = useState('');
+
+    store.subscribe(() => {
+        const currentRecipe = store.getState().recipes.currentlyViewedRecipe;
+        const recipeIngredients = splitIngredientsIntoList(currentRecipe.ingredients);
+
+        console.log('HELP');
+        console.log(currentRecipe);
+        setHiddenIngredients([]);
+
+        if (Object.keys(currentRecipe).length > 0) {
+            setRecipeName(currentRecipe.name);
+            setRecipeTime(currentRecipe.time);
+            setInstructions(currentRecipe.instructions);
+            setIngredients(recipeIngredients);
+            setNumberOfIngredients(recipeIngredients.length)
+            setModalOpen(true);
+        }
+    });
 
     const handleSubmit = () => {
         let ingredientString = '';
@@ -36,12 +56,11 @@ const CreateRecipeModal = () => {
             ingredientCount: ingredientCount,
             ingredients: ingredientString,
             instructions: instructions,
-            documentID: ''
+            documentID: store.getState().recipes.currentlyViewedRecipe.documentID
         }
 
-        firebase.firestore().collection('recipes').add(recipe).then((response) => {
-            recipe.documentID = response.id;
-            dispatch(createNewRecipe(recipe));
+        firebase.firestore().doc('recipes/' +  recipe.documentID).set(recipe).then((response) => {
+            dispatch(updateRecipe(recipe, recipe.documentID));
             setModalOpen(false);
         });
     }
@@ -58,23 +77,19 @@ const CreateRecipeModal = () => {
 
     return (
         <div>
-            <Button variant="success" className="mt-2" onClick={() => { setModalOpen(true)}}>
-                <FontAwesomeIcon icon={faPlus as IconProp}></FontAwesomeIcon>
-                {' '}Create New Recipe
-            </Button>
             <Modal show={modalOpen}>
                 <Modal.Header>
-                    <Modal.Title>Create a New Recipe</Modal.Title>
+                    <Modal.Title>Edit: {recipeName}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
                         <Form.Group>
                             <Form.Label><b>Recipe Name</b></Form.Label>
-                            <Form.Control placeholder="Enter recipe name..." onChange={(event: React.FormEvent) => { setRecipeName((event.target as any).value) }}></Form.Control>
+                            <Form.Control value={recipeName} placeholder="Enter recipe name..." onChange={(event: React.FormEvent) => { setRecipeName((event.target as any).value) }}></Form.Control>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label><b>Time Required</b></Form.Label>
-                            <Form.Control placeholder="Enter amount of time..." onChange={(event: React.FormEvent) => { setRecipeTime((event.target as any).value) }}></Form.Control>
+                            <Form.Control value={recipeTime} placeholder="Enter amount of time..." onChange={(event: React.FormEvent) => { setRecipeTime((event.target as any).value) }}></Form.Control>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label><b>Ingredients</b></Form.Label>
@@ -83,7 +98,7 @@ const CreateRecipeModal = () => {
                                 <div>
                                     { !hiddenIngredients.includes(i) ?
                                     <InputGroup key={i} className="my-1">
-                                        <Form.Control placeholder="Enter ingredient quantity and type..." onChange={(event: React.FormEvent) => addIngredientToList(i, (event.target as any).value)}></Form.Control>
+                                        <Form.Control value={ingredients[i]} placeholder="Enter ingredient quantity and type..." onChange={(event: React.FormEvent) => addIngredientToList(i, (event.target as any).value)}></Form.Control>
                                         <InputGroup.Append>
                                             <Button variant="outline-danger" className="float-right" onClick={() => deleteIngredient(i)}><FontAwesomeIcon icon={faTrash as IconProp}></FontAwesomeIcon></Button>
                                         </InputGroup.Append>
@@ -94,17 +109,17 @@ const CreateRecipeModal = () => {
                         </Form.Group>
                         <Form.Group>
                             <Form.Label><b>Instructions</b></Form.Label>
-                            <Form.Control placeholder="Enter instructions..." as="textarea" onChange={(event: React.FormEvent) => { setInstructions((event.target as any).value) }}></Form.Control>
+                            <Form.Control value={instructions} placeholder="Enter instructions..." as="textarea" onChange={(event: React.FormEvent) => { setInstructions((event.target as any).value) }}></Form.Control>
                         </Form.Group>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => { setModalOpen(false) }}>Close</Button>
-                    <Button variant="success" onClick={handleSubmit}>Create Recipe</Button>
+                    <Button variant="success" onClick={handleSubmit}>Update Recipe</Button>
                 </Modal.Footer>
             </Modal>
         </div>
     )
 }
 
-export default CreateRecipeModal;
+export default ModifyRecipeModal;
