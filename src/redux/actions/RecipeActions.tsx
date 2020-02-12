@@ -34,7 +34,7 @@ export const viewRecipe = (recipe: firebase.firestore.DocumentData): RecipeActio
     }
 }
 
-export const deleteAll = (): ProjectAction => {
+export const deleteAllRecipes = (): ProjectAction => {
     return {
         type: DELETE_ALL_RECIPES,
         payload: {},

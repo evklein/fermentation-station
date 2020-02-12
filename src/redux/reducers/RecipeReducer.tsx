@@ -37,6 +37,10 @@ const ProjectReducer = (state = defaultRecipeState, action: RecipeAction) => {
                 userRecipes: [],
                 currentlyViewedRecipe: {}
             }
+        default:
+            return {
+                ...state
+            }
     }
 };
 
