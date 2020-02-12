@@ -5,7 +5,7 @@ import firebase from 'firebase';
 import { Button, Card, Alert, Container, Row, Col, ButtonGroup, Form, FormControl } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { CREATE_NEW_PROJECT, ProjectState } from '../../redux/types/ProjectTypes';
-import { createNewProject, viewProject, deleteProject, updateProject } from '../../redux/actions/ProjectActions';
+import { createNewProject, viewProject, deleteProject, updateProject, deleteAll } from '../../redux/actions/ProjectActions';
 import CreateProjectModal from './CreateProjectModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt, faUtensilSpoon, faBomb, faClock } from '@fortawesome/fontawesome-free-solid';
@@ -21,6 +21,7 @@ const Home = () => {
     const [finishedProjectsHidden, setFinishedProjectsHidden] = useState(true);
 
     useEffect(() => {
+        dispatch(deleteAll());
         initializeProjects();
     }, []);
 

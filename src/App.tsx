@@ -15,6 +15,7 @@ import { store } from '.';
 import { useDispatch } from 'react-redux';
 import { signOutUser } from './redux/actions/AuthActions';
 import { deleteAll } from './redux/actions/ProjectActions';
+import Recipes from './components/recipes/Recipes';
 
 const App = () => {
   const [dispatch, setDispatch] = useState(useDispatch);
@@ -43,10 +44,14 @@ const App = () => {
         </Navbar.Brand>
         { !loggedIn ? 
           <Nav>
-            <Nav.Link href="/sign-up">Sign Up</Nav.Link>
-            <Nav.Link href="/sign-in">Sign-In</Nav.Link>
+            <Link className="text-secondary mx-2 text-decoration-none" to="/sign-up">Sign Up</Link>
+            <Link className="text-secondary mx-2 text-decoration-none" to="/sign-in">Sign-In</Link>
           </Nav> :
           <Navbar.Collapse>
+            <Nav>
+              <Link className="text-secondary mx-2 text-decoration-none" to="/home">Projects</Link>
+              <Link className="text-secondary mx-2 text-decoration-none" to="/recipes">Recipes</Link>
+            </Nav>
             <Nav className="ml-auto">
               <Nav.Link onClick={logout}>Log Out</Nav.Link>
             </Nav>
@@ -63,6 +68,9 @@ const App = () => {
         </Route>
         <Route path="/home">
           <Home></Home>
+        </Route>
+        <Route path="/recipes">
+          <Recipes></Recipes>
         </Route>
       </Switch>
     </Router>
