@@ -12,12 +12,14 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import ModifyProjectModal from '../home/ModifyProjectModal';
 import ModifyRecipeModal from './ModifyRecipeModal';
 import { splitIngredientsIntoList } from '../../utility/helper';
+import { faSync } from '@fortawesome/fontawesome-free-solid';
 
 const Recipes = () => {
     const [dispatch, setDispatch] = useState(useDispatch);
     const [userRecipes, setUserRecipes] = useState([] as firebase.firestore.DocumentData[]);
     const [openRecipe, setOpenRecipe] = useState({} as firebase.firestore.DocumentData);
     const [searchText, setSearchText] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         dispatch(deleteAllRecipes());
@@ -25,6 +27,7 @@ const Recipes = () => {
     }, []);
 
     const initializeRecipes = () => {
+        setIsLoading(true);
         firebase.firestore().collection('recipes').where('owner', '==', store.getState().auth.email).get().then((response) => {
             response.forEach((document) => {
                 const documentData = document.data();
@@ -33,6 +36,7 @@ const Recipes = () => {
             });
 
             setUserRecipes(store.getState().recipes.userRecipes);
+            setIsLoading(false);
         })
     }
 
@@ -74,9 +78,13 @@ const Recipes = () => {
                 </Form>
             </Row>
             <Row className="ml-2">
-                { userRecipes.length === 0 ?
-                    <h2>0 recipes found</h2> : ''
-                }
+                { !isLoading ?
+                <div>
+                    { userRecipes.length === 0 ?
+                        <h2>0 recipes found</h2> : ''
+                    } 
+                </div> : <h2><FontAwesomeIcon icon={faSync as IconProp} spin></FontAwesomeIcon></h2>
+                }  
             </Row>
             <Row noGutters>
                 { userRecipes.filter((recipe) => { return recipe.name.toLowerCase().includes(searchText.toLowerCase()) }).map((recipe: firebase.firestore.DocumentData) => 

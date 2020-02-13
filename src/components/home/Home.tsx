@@ -8,7 +8,7 @@ import { CREATE_NEW_PROJECT, ProjectState } from '../../redux/types/ProjectTypes
 import { createNewProject, viewProject, deleteProject, updateProject, deleteAll } from '../../redux/actions/ProjectActions';
 import CreateProjectModal from './CreateProjectModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPencilAlt, faUtensilSpoon, faBomb, faClock } from '@fortawesome/fontawesome-free-solid';
+import { faPencilAlt, faUtensilSpoon, faBomb, faClock, faSync } from '@fortawesome/fontawesome-free-solid';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faBug, faWineBottle, faThermometerEmpty, faBacon, faSkull, faTrash, faCheck, faPlus, faDrumstickBite, faStickyNote, faExclamation } from '@fortawesome/free-solid-svg-icons';
 import ModifyProjectModal from './ModifyProjectModal';
@@ -17,6 +17,7 @@ import { formatDate, SECONDS_IN_4_HOURS } from '../../utility/helper';
 const Home = () => {
     const [dispatch, setDispatch] = useState(useDispatch);
     const [database, setDatabase] = useState(firebase.firestore());
+    const [isLoading, setIsLoading] = useState(false);
     const [userProjects, setUserProjects] = useState([] as firebase.firestore.DocumentData[]);
     const [finishedProjectsHidden, setFinishedProjectsHidden] = useState(true);
 
@@ -26,6 +27,7 @@ const Home = () => {
     }, []);
 
     const initializeProjects = () => {
+        setIsLoading(true)
         database.collection("projects").where('owner', '==', store.getState().auth.email).get().then((response) => {
             response.forEach((document) => {
                 const documentData = document.data();
@@ -34,6 +36,7 @@ const Home = () => {
             });
             
             setUserProjects(store.getState().projects.userProjects);
+            setIsLoading(false);
         });
     }
 
@@ -125,9 +128,13 @@ const Home = () => {
                 </label>
             </Row>
             <Row className="ml-2">
-                { userProjects.length === 0 ?
-                    <h2>0 projects found</h2> : ''
-                }
+                { !isLoading ?
+                <div>
+                    { userProjects.length === 0 ?
+                        <h2>0 projects found</h2> : ''
+                    } 
+                </div> : <h2><FontAwesomeIcon icon={faSync as IconProp} spin></FontAwesomeIcon></h2>
+                }  
             </Row>
             <Row noGutters>
                 { userProjects.map((project: firebase.firestore.DocumentData) =>
