@@ -123,7 +123,9 @@ const Recipes = () => {
                                             </ul>: ''
                                         }
                                         <h6>Instructions</h6>
-                                        { recipe.instructions ? recipe.instructions : 'No instructions found.' }
+                                        <p style={{ whiteSpace: 'pre-line'}}>
+                                            { recipe.instructions ? recipe.instructions : 'No instructions found.' }
+                                        </p>
                                     </div> : ''
                                 }
                             </Card.Text>
