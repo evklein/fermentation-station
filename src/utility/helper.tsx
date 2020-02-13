@@ -4,6 +4,15 @@ const SECONDS_IN_WEEK: number = 60 * 60 * 24 * 7;
 
 export const SECONDS_IN_4_HOURS = 60 * 60 * 4;
 
+export const compareObjectNames = (first: firebase.firestore.DocumentData, second: firebase.firestore.DocumentData): number => {
+    let firstName = first.name.toUpperCase();
+    let secondName = second.name.toUpperCase();
+
+    if (firstName < secondName) return -1;
+    else if (firstName > secondName) return 1;
+    else return 0;
+}
+
 export const formatDate = (date: any): string => {
     if (date.seconds === undefined) {
         return new Date(date).toLocaleDateString();

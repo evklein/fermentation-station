@@ -12,7 +12,7 @@ import { faPencilAlt, faUtensilSpoon, faBomb, faClock, faSync } from '@fortaweso
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faBug, faWineBottle, faThermometerEmpty, faBacon, faSkull, faTrash, faCheck, faPlus, faDrumstickBite, faStickyNote, faExclamation } from '@fortawesome/free-solid-svg-icons';
 import ModifyProjectModal from './ModifyProjectModal';
-import { formatDate, SECONDS_IN_4_HOURS } from '../../utility/helper';
+import { formatDate, SECONDS_IN_4_HOURS, compareObjectNames } from '../../utility/helper';
 
 const Home = () => {
     const [dispatch, setDispatch] = useState(useDispatch);
@@ -137,7 +137,7 @@ const Home = () => {
                 }  
             </Row>
             <Row noGutters>
-                { userProjects.map((project: firebase.firestore.DocumentData) =>
+                { userProjects.sort(compareObjectNames).map((project: firebase.firestore.DocumentData) =>
                 <Col lg="auto" md="auto" sm="auto" xs="auto">
                     { project.status !== 'Done' || !finishedProjectsHidden  ?
                         <Card style={{ width: '18rem' }} className="mt-2 mx-2 mb-2">

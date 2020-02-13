@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import ModifyProjectModal from '../home/ModifyProjectModal';
 import ModifyRecipeModal from './ModifyRecipeModal';
-import { splitIngredientsIntoList } from '../../utility/helper';
+import { splitIngredientsIntoList, compareObjectNames } from '../../utility/helper';
 import { faSync } from '@fortawesome/fontawesome-free-solid';
 
 const Recipes = () => {
@@ -87,7 +87,7 @@ const Recipes = () => {
                 }  
             </Row>
             <Row noGutters>
-                { userRecipes.filter((recipe) => { return recipe.name.toLowerCase().includes(searchText.toLowerCase()) }).map((recipe: firebase.firestore.DocumentData) => 
+                { userRecipes.sort(compareObjectNames).filter((recipe) => { return recipe.name.toLowerCase().includes(searchText.toLowerCase()) }).map((recipe: firebase.firestore.DocumentData) => 
                 <Col>
                     <Card style={{ width: '50rem' }} className="mt-2 mx-2 mb-2" onClick={() => changeOpenRecipe(recipe)}>
                         <Card.Body>

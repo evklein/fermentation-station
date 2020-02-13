@@ -117,8 +117,8 @@ const ModifyProjectModal = () => {
                             <Form.Check type="checkbox" defaultChecked={needsBurp} label="Needs Regular Burping" onChange={(event: React.FormEvent) => { setBurp(!needsBurp)}}></Form.Check>
                             { needsBurp ? 
                                 <div>
-                                    <Form.Control placeholder="Number" type="number" defaultValue={burpTimeValue} onChange={(event: React.FormEvent) => { setBurpTimeValue((event.currentTarget as any).value) }}></Form.Control>
-                                    <Form.Control as="select" value={burpTimeUnits} onChange={(event: React.FormEvent) => { setBurpTimeUnits((event.currentTarget as any).value )}}>
+                                    <Form.Control className="mt-1" placeholder="Number" type="number" defaultValue={burpTimeValue} onChange={(event: React.FormEvent) => { setBurpTimeValue((event.currentTarget as any).value) }}></Form.Control>
+                                    <Form.Control className="mt-1" as="select" value={burpTimeUnits} onChange={(event: React.FormEvent) => { setBurpTimeUnits((event.currentTarget as any).value )}}>
                                         <option>Hour(s)</option>
                                         <option>Day(s)</option>
                                         <option>Week(s)</option>
@@ -129,13 +129,13 @@ const ModifyProjectModal = () => {
                             <Form.Check type="checkbox" defaultChecked={needsFeed} label="Needs Regular Feeding" onChange={(event: React.FormEvent) => { setFeed(!needsFeed)}}></Form.Check>
                             { needsFeed ?
                                 <div>
-                                    <Form.Control placeholder="Number" type="number" defaultValue={feedTimeValue} onChange={(event: React.FormEvent) => { setFeedTimeValue((event.currentTarget as any).value) }}></Form.Control>
-                                    <Form.Control as="select" value={feedTimeUnits} onChange={(event: React.FormEvent) => { setFeedTimeUnits((event.currentTarget as any).value )}}>
+                                    <Form.Control className="mt-1" placeholder="Number" type="number" defaultValue={feedTimeValue} onChange={(event: React.FormEvent) => { setFeedTimeValue((event.currentTarget as any).value) }}></Form.Control>
+                                    <Form.Control className="mt-1" as="select" value={feedTimeUnits} onChange={(event: React.FormEvent) => { setFeedTimeUnits((event.currentTarget as any).value )}}>
                                         <option>Hour(s)</option>
                                         <option>Day(s)</option>
                                         <option>Week(s)</option>
                                     </Form.Control>
-                                    <Form.Control placeholder="Feed material..." onChange={(event: React.FormEvent) => { setFeedMaterials((event.currentTarget as any).value) }}></Form.Control>
+                                    <Form.Control className="mt-1" placeholder="Feed material..." onChange={(event: React.FormEvent) => { setFeedMaterials((event.currentTarget as any).value) }}></Form.Control>
                                 </div> : ''
                             }
                         </Form.Group>
