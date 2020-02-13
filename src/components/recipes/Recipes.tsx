@@ -1,5 +1,5 @@
 import React, { FormEvent, useState, useEffect } from 'react';
-import { Container, Row, Col, Card, ButtonGroup, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, ButtonGroup, Button, Form } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { store } from '../..';
 import { Redirect } from 'react-router-dom';
@@ -17,6 +17,7 @@ const Recipes = () => {
     const [dispatch, setDispatch] = useState(useDispatch);
     const [userRecipes, setUserRecipes] = useState([] as firebase.firestore.DocumentData[]);
     const [openRecipe, setOpenRecipe] = useState({} as firebase.firestore.DocumentData);
+    const [searchText, setSearchText] = useState('');
 
     useEffect(() => {
         dispatch(deleteAllRecipes());
@@ -68,6 +69,9 @@ const Recipes = () => {
             { !store.getState().auth.isLoggedIn ? <Redirect to="/sign-in"></Redirect> : ''}
             <Row className="ml-2">
                 <CreateRecipeModal></CreateRecipeModal>
+                <Form>
+                <Form.Control className="mt-2 ml-2" type="text" placeholder="Search recipes" onChange={(event: React.FormEvent) => setSearchText((event.target as any).value)}></Form.Control>
+                </Form>
             </Row>
             <Row className="ml-2">
                 { userRecipes.length === 0 ?
@@ -75,7 +79,7 @@ const Recipes = () => {
                 }
             </Row>
             <Row noGutters>
-                { userRecipes.map((recipe: firebase.firestore.DocumentData) => 
+                { userRecipes.filter((recipe) => { return recipe.name.toLowerCase().includes(searchText.toLowerCase()) }).map((recipe: firebase.firestore.DocumentData) => 
                 <Col>
                     <Card style={{ width: '50rem' }} className="mt-2 mx-2 mb-2" onClick={() => changeOpenRecipe(recipe)}>
                         <Card.Body>
