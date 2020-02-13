@@ -69,8 +69,8 @@ const Recipes = () => {
             { !store.getState().auth.isLoggedIn ? <Redirect to="/sign-in"></Redirect> : ''}
             <Row className="ml-2">
                 <CreateRecipeModal></CreateRecipeModal>
-                <Form>
-                <Form.Control className="mt-2 ml-2" type="text" placeholder="Search recipes" onChange={(event: React.FormEvent) => setSearchText((event.target as any).value)}></Form.Control>
+                <Form style={{width: '350px'}}>
+                    <Form.Control className="mt-2 ml-2" type="text" placeholder="Search recipes" onChange={(event: React.FormEvent) => setSearchText((event.target as any).value)}></Form.Control>
                 </Form>
             </Row>
             <Row className="ml-2">

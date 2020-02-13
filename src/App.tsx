@@ -16,6 +16,7 @@ import { useDispatch } from 'react-redux';
 import { signOutUser } from './redux/actions/AuthActions';
 import { deleteAll } from './redux/actions/ProjectActions';
 import Recipes from './components/recipes/Recipes';
+import { deleteAllRecipes } from './redux/actions/RecipeActions';
 
 const App = () => {
   const [dispatch, setDispatch] = useState(useDispatch);
@@ -32,6 +33,7 @@ const App = () => {
   const logout = () => {
     dispatch(signOutUser(store.getState().auth.email));
     dispatch(deleteAll());
+    dispatch(deleteAllRecipes());
     return <Redirect to="/sign-in"></Redirect>
   }
 

@@ -7,7 +7,7 @@ import { createNewProject, updateProject } from '../../redux/actions/ProjectActi
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt, faCheck } from '@fortawesome/fontawesome-free-solid';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { formatDate, convertSecondsToProperFormat, convertUnitsToSeconds } from '../../utility/helper';
+import { formatDate, convertSecondsToProperFormat, convertUnitsToSeconds, formatDateAsISO } from '../../utility/helper';
 
 const ModifyProjectModal = () => {
     const [dispatch, setDispatch] = useState(useDispatch);
@@ -32,6 +32,9 @@ const ModifyProjectModal = () => {
 
     store.subscribe(() => {
         const currentProject = store.getState().projects.currentlyViewedProject;
+
+        console.log('trying for it.');
+        console.log(currentProject);
 
         if (Object.keys(currentProject).length > 0) {
             setProjectName(currentProject.name);
@@ -108,7 +111,7 @@ const ModifyProjectModal = () => {
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>End Date (Optional)</Form.Label>
-                            <Form.Control type="date" defaultValue={endDate ? formatDate(endDate) : ''} onChange={(event: React.FormEvent) => { setEndDate((event.currentTarget as any).value) }}></Form.Control>
+                            <Form.Control type="date" value={endDate ? formatDateAsISO(endDate) : ''} onChange={(event: React.FormEvent) => { setEndDate((event.currentTarget as any).value) }}></Form.Control>
                         </Form.Group>
                         <Form.Group>
                             <Form.Check type="checkbox" defaultChecked={needsBurp} label="Needs Regular Burping" onChange={(event: React.FormEvent) => { setBurp(!needsBurp)}}></Form.Check>
