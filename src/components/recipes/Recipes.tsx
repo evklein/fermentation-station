@@ -19,7 +19,7 @@ const Recipes = () => {
     const [userRecipes, setUserRecipes] = useState([] as firebase.firestore.DocumentData[]);
     const [openRecipe, setOpenRecipe] = useState({} as firebase.firestore.DocumentData);
     const [searchText, setSearchText] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         dispatch(deleteAllRecipes());
@@ -36,6 +36,8 @@ const Recipes = () => {
             });
 
             setUserRecipes(store.getState().recipes.userRecipes);
+            setIsLoading(false);
+        }, error => {
             setIsLoading(false);
         })
     }
@@ -80,7 +82,7 @@ const Recipes = () => {
             <Row className="ml-2">
                 { !isLoading ?
                 <div>
-                    { userRecipes.length === 0 ?
+                    { userRecipes.filter((recipe) => { return recipe.name.toLowerCase().includes(searchText.toLowerCase())}).length === 0 ?
                         <h2>0 recipes found</h2> : ''
                     } 
                 </div> : <h2><FontAwesomeIcon icon={faSync as IconProp} spin></FontAwesomeIcon></h2>
@@ -88,7 +90,7 @@ const Recipes = () => {
             </Row>
             <Row noGutters>
                 { userRecipes.sort(compareObjectNames).filter((recipe) => { return recipe.name.toLowerCase().includes(searchText.toLowerCase()) }).map((recipe: firebase.firestore.DocumentData) => 
-                <Col>
+                <Col className="animated fadeIn">
                     <Card style={{ width: '50rem' }} className="mt-2 mx-2 mb-2" onClick={() => changeOpenRecipe(recipe)}>
                         <Card.Body>
                             <Card.Title>

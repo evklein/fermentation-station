@@ -17,7 +17,7 @@ import { formatDate, SECONDS_IN_4_HOURS, compareObjectNames } from '../../utilit
 const Home = () => {
     const [dispatch, setDispatch] = useState(useDispatch);
     const [database, setDatabase] = useState(firebase.firestore());
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [userProjects, setUserProjects] = useState([] as firebase.firestore.DocumentData[]);
     const [finishedProjectsHidden, setFinishedProjectsHidden] = useState(true);
 
@@ -36,6 +36,8 @@ const Home = () => {
             });
             
             setUserProjects(store.getState().projects.userProjects);
+            setIsLoading(false);
+        }, error => {
             setIsLoading(false);
         });
     }
@@ -108,8 +110,7 @@ const Home = () => {
 
     const showTimeAlert = (project: firebase.firestore.DocumentData): string => {
         if (project.doneDate) {
-            console.log('Epoch: ' + Date.now() + ', ' + new Date(project.doneDate).getSeconds())
-            if (Date.now() >= new Date(project.doneDate).getSeconds() - SECONDS_IN_4_HOURS) {
+            if (Date.now() >= new Date(formatDate(project.doneDate)).getTime() - SECONDS_IN_4_HOURS) {
                 return 'This project is possibly done.'
             }
         }
@@ -138,9 +139,9 @@ const Home = () => {
             </Row>
             <Row noGutters>
                 { userProjects.sort(compareObjectNames).map((project: firebase.firestore.DocumentData) =>
-                <Col lg="auto" md="auto" sm="auto" xs="auto">
+                <Col lg="auto" md="auto" sm="auto" xs="auto" className="animated fadeIn">
                     { project.status !== 'Done' || !finishedProjectsHidden  ?
-                        <Card style={{ width: '18rem' }} className="mt-2 mx-2 mb-2">
+                        <Card style={{ width: '20rem' }} className="mt-2 mx-2 mb-2">
                             <Card.Body>
                                 <Card.Title>
                                     { project.status === 'Done' ? <FontAwesomeIcon icon={faCheck as IconProp}></FontAwesomeIcon> : ''}
@@ -199,10 +200,10 @@ const Home = () => {
                                         </Alert> : ''
                                     }
                                     { project.status !== 'Done' ?
-                                        <ButtonGroup className="mt-1">
+                                        <ButtonGroup className="mt-1" style={{ height: '0px'}}>
                                             { project.burpTime > 0 ? <Button variant="outline-primary" onClick={() => { setBurpToNow(project) }}>Burped Today</Button> : '' }
                                             { project.feedTime > 0 ? <Button variant="outline-success" onClick={() => { setFeedToNow(project) }}>Fed Today</Button> : '' }
-                                        </ButtonGroup> : ''
+                                        </ButtonGroup> : <span></span>
                                     }
                                     </Card.Text>
                             </Card.Body>

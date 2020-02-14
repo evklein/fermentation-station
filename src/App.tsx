@@ -39,6 +39,7 @@ const App = () => {
 
   return (
     <Router>
+      <Redirect to="/sign-in"></Redirect> {/* Redirect if at / */}
       <Navbar bg="dark" variant="dark" expand="lg">
         <Navbar.Brand>
           <FontAwesomeIcon icon={faBug as IconProp}/>{' '}

@@ -27,6 +27,8 @@ const CreateProjectModal = () => {
 
     
     const handleSubmit = () => {
+        console.log('THE DATE IS: ');
+        console.log(startDate);
         const project = {
             name: projectName,
             owner: store.getState().auth.email,
@@ -85,11 +87,11 @@ const CreateProjectModal = () => {
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Start Date</Form.Label>
-                            <Form.Control type="date" onChange={(event: React.FormEvent) => { setStartDate(new Date((event.target as any).value)) }}></Form.Control>
+                            <Form.Control type="date" onChange={(event: React.FormEvent) => { setStartDate(new Date((event.target as any).value + 'T00:00:00')) }}></Form.Control>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>End Date (Optional)</Form.Label>
-                            <Form.Control type="date" onChange={(event: React.FormEvent) => { setEndDate(new Date((event.target as any).value)) }}></Form.Control>
+                            <Form.Control type="date" onChange={(event: React.FormEvent) => { setEndDate(new Date((event.target as any).value + 'T00:00:00')) }}></Form.Control>
                         </Form.Group>
                         <Form.Group>
                             <Form.Check type="checkbox" label="Needs Regular Burping" onChange={(event: React.FormEvent) => { setBurp(!needsBurp)}}></Form.Check>

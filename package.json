@@ -13,6 +13,7 @@
     "@testing-library/user-event": "^7.2.1",
     "@types/jest": "^24.9.1",
     "@types/node": "^12.12.26",
+    "animate.css": "^3.7.2",
     "bootstrap": "^4.4.1",
     "create-react-class": "^15.6.3",
     "firebase": "^7.8.0",

@@ -24,7 +24,8 @@ const ProjectReducer = (state = defaultRecipeState, action: RecipeAction) => {
         case DELETE_RECIPE:
             return {
                 ...state,
-                userRecipes: [...state.userRecipes.filter((recipe) => { return recipe.documentID !== action.documentID })]
+                userRecipes: [...state.userRecipes.filter((recipe) => { return recipe.documentID !== action.documentID })],
+                currentlyViewedRecipe: {}
             }
         case VIEW_RECIPE:
             return {
