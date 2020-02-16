@@ -77,14 +77,14 @@ const Home = () => {
     }
 
     const setFeedToNow = (project: firebase.firestore.DocumentData) => {
-        project.lastFeedTime = Date.now();
+        project.lastFeedTime = Date.now() / 1000;
         firebase.firestore().doc('projects/' + project.documentID).set(project).then((response) => {
             dispatch(updateProject(project, project.documentID));
         });
     }
 
     const setBurpToNow = (project: firebase.firestore.DocumentData) => {
-        project.lastBurpTime = Date.now();
+        project.lastBurpTime = Date.now() / 1000;
         firebase.firestore().doc('projects/' + project.documentID).set(project).then((response) => {
             dispatch(updateProject(project, project.documentID));
         });
@@ -92,7 +92,7 @@ const Home = () => {
 
     const showBurpAlert = (project: firebase.firestore.DocumentData): string => {
         if (project.lastBurpTime === 0) return '';
-        else if (Date.now() - project.lastBurpTime > project.burpTime - SECONDS_IN_4_HOURS) {
+        else if (Date.now() / 1000 - project.lastBurpTime > project.burpTime - SECONDS_IN_4_HOURS) {
             return 'This project should be burped soon to prevent explosions.'
         }
 
@@ -101,7 +101,7 @@ const Home = () => {
 
     const showFeedAlert = (project: firebase.firestore.DocumentData): string => {
         if (project.lastFeedTime === 0) return '';
-        else if (Date.now() - project.lastFeedTime > project.feedTime - SECONDS_IN_4_HOURS) {
+        else if (Date.now() / 1000 - project.lastFeedTime > project.feedTime - SECONDS_IN_4_HOURS) {
             return 'This project should be fed soon.'
         }
 
