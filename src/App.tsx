@@ -3,7 +3,6 @@ import './App.css';
 import SignUp from './components/auth/SignUp';
 import SignIn from './components/auth/SignIn';
 import firebase from 'firebase';
-import { FirebaseConfig } from './config';
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
 import { Navbar, Nav, Button } from 'react-bootstrap';
 import Home from './components/home/Home';
@@ -17,6 +16,7 @@ import { signOutUser } from './redux/actions/AuthActions';
 import { deleteAll } from './redux/actions/ProjectActions';
 import Recipes from './components/recipes/Recipes';
 import { deleteAllRecipes } from './redux/actions/RecipeActions';
+import { firebaseConfig } from './config';
 
 const App = () => {
   const [dispatch, setDispatch] = useState(useDispatch);
