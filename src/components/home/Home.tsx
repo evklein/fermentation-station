@@ -200,7 +200,7 @@ const Home = () => {
                                         </Alert> : ''
                                     }
                                     { project.status !== 'Done' ?
-                                        <ButtonGroup className="mt-1" style={{ height: '0px'}}>
+                                        <ButtonGroup className="mt-1">
                                             { project.burpTime > 0 ? <Button variant="outline-primary" onClick={() => { setBurpToNow(project) }}>Burped Today</Button> : '' }
                                             { project.feedTime > 0 ? <Button variant="outline-success" onClick={() => { setFeedToNow(project) }}>Fed Today</Button> : '' }
                                         </ButtonGroup> : <span></span>
