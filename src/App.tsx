@@ -23,7 +23,7 @@ const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
 
   if (!firebase.apps.length) {
-    firebase.initializeApp(FirebaseConfig);
+    firebase.initializeApp(firebaseConfig);
   }
 
   store.subscribe(() => {
