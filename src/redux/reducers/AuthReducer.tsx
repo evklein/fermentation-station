@@ -14,12 +14,14 @@ const AuthReducer = (state = defaultAuthState, action: UserAuthAction) => {
                 ...state
             }; 
         case LOGIN:
+            localStorage.setItem("user", action.payload.email);
             return {
                 ...state,
                 isLoggedIn: true,
                 email: action.payload.email
             }
         case LOGOUT:
+            localStorage.clear();
             return {
                 ...state,
                 isLoggedIn: false,

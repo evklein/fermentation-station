@@ -28,13 +28,20 @@ const App = () => {
 
   store.subscribe(() => {
     setLoggedIn(store.getState().auth.isLoggedIn);
+  });
+
+  firebase.auth().onAuthStateChanged((user) => {
+    localStorage.setItem("authUser", JSON.stringify(user));
   })
 
   const logout = () => {
-    dispatch(signOutUser(store.getState().auth.email));
-    dispatch(deleteAll());
-    dispatch(deleteAllRecipes());
-    return <Redirect to="/sign-in"></Redirect>
+    firebase.auth().signOut().then((response) => {
+      dispatch(signOutUser(store.getState().auth.email));
+      dispatch(deleteAll());
+      dispatch(deleteAllRecipes());
+      localStorage.removeItem("authUser");
+      return <Redirect to="/sign-in"></Redirect>
+    });
   }
 
   return (

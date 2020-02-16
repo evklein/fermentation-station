@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
@@ -14,6 +14,18 @@ const SignIn = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [redirect, setRedirect] = useState(false);
+
+    useEffect(() => {
+        checkIfAlreadyLoggedIn();
+    }, []);
+
+    const checkIfAlreadyLoggedIn = () => {
+        const authUser = JSON.parse(localStorage.getItem("authUser") as string);
+        if (authUser) {
+            dispatch(signInUser(authUser.email, ''));
+            setRedirect(true);
+        }
+    }
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) : void => {
         event.preventDefault();
