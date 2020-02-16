@@ -1,10 +1,10 @@
 export const firebaseConfig = {
-    apiKey: "AIzaSyAn6ME3zSovT7OseC9qEzl_t7OXaCtJA1o",
-    authDomain: "fermentation-station-78efc.firebaseapp.com",
-    databaseURL: "https://fermentation-station-78efc.firebaseio.com",
-    projectId: "fermentation-station-78efc",
-    storageBucket: "fermentation-station-78efc.appspot.com",
-    messagingSenderId: "138996274829",
-    appId: "1:138996274829:web:8dc9d0992dac5b5d01f4c4",
-    measurementId: "G-7LC0PWGQ4N"
+    apiKey: "AIzaSyC402n30li_CIoC6KyvjgDpiIPX5k0s8b0",
+    authDomain: "fermstat-prod.firebaseapp.com",
+    databaseURL: "https://fermstat-prod.firebaseio.com",
+    projectId: "fermstat-prod",
+    storageBucket: "fermstat-prod.appspot.com",
+    messagingSenderId: "1044796804119",
+    appId: "1:1044796804119:web:8a1781109aec4a9e55a052",
+    measurementId: "G-D2WMP000SK"
 }
