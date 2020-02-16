@@ -25,8 +25,6 @@ const ModifyRecipeModal = () => {
         const currentRecipe = store.getState().recipes.currentlyViewedRecipe;
         const recipeIngredients = splitIngredientsIntoList(currentRecipe.ingredients);
 
-        console.log('HELP');
-        console.log(currentRecipe);
         setHiddenIngredients([]);
 
         if (Object.keys(currentRecipe).length > 0) {

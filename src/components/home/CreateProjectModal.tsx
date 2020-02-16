@@ -27,8 +27,6 @@ const CreateProjectModal = () => {
 
     
     const handleSubmit = () => {
-        console.log('THE DATE IS: ');
-        console.log(startDate);
         const project = {
             name: projectName,
             owner: store.getState().auth.email,
@@ -44,8 +42,6 @@ const CreateProjectModal = () => {
             done: false,
             documentID: ''
         }
-
-        console.log(project);
 
         firebase.firestore().collection('projects').add(project).then((response) => {
             project.documentID = response.id;

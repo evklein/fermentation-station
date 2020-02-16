@@ -33,9 +33,6 @@ const ModifyProjectModal = () => {
     store.subscribe(() => {
         const currentProject = store.getState().projects.currentlyViewedProject;
 
-        console.log('trying for it.');
-        console.log(currentProject);
-
         if (Object.keys(currentProject).length > 0) {
             setProjectName(currentProject.name);
             setStatus(currentProject.status);
