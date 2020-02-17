@@ -37,7 +37,7 @@ const CreateProjectModal = () => {
             lastBurpTime: needsBurp ? Date.now() : 0,
             feedTime: needsFeed ? convertUnitsToSeconds(feedTimeValue, feedTimeUnits) : 0,
             lastFeedTime: needsFeed ? Date.now() : 0,
-            feedMaterial: feedMaterials,
+            feedMaterial: needsFeed ? feedMaterials : '',
             notes: notes,
             done: false,
             documentID: ''
