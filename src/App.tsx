@@ -16,14 +16,16 @@ import { signOutUser } from './redux/actions/AuthActions';
 import { deleteAll } from './redux/actions/ProjectActions';
 import Recipes from './components/recipes/Recipes';
 import { deleteAllRecipes } from './redux/actions/RecipeActions';
-import { firebaseConfig } from './config';
+import { FirebaseConfig } from './config';
 
 const App = () => {
   const [dispatch, setDispatch] = useState(useDispatch);
   const [loggedIn, setLoggedIn] = useState(false);
 
+  console.log(process.env);
+
   if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(FirebaseConfig);
   }
 
   store.subscribe(() => {
