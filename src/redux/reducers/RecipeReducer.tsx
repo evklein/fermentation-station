@@ -11,7 +11,8 @@ const ProjectReducer = (state = defaultRecipeState, action: RecipeAction) => {
         case CREATE_NEW_RECIPE:
             return {
                 ...state,
-                userRecipes: [...state.userRecipes, action.payload]
+                userRecipes: [...state.userRecipes, action.payload],
+                currentlyViewedRecipe: {}
             }
         case UPDATE_RECIPE:
             return {

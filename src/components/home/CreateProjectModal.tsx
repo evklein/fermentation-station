@@ -52,8 +52,18 @@ const CreateProjectModal = () => {
     }
 
     const cleanUpForm = () => {
+        setProjectName('');
+        setNotes('');
         setBurp(false);
         setFeed(false);
+        setFeedMaterials('');
+        setStartDate(new Date());
+        setEndDate(new Date('01-01-1900'));
+        setStatus('Fermentation');
+        setFeedTimeUnits('Hour(s)');
+        setFeedTimeValue(0);
+        setFeedTimeUnits('Hour(s');
+        setBurpTimeValue(0);
     }
 
     return (

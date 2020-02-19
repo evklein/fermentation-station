@@ -42,8 +42,18 @@ const CreateRecipeModal = () => {
         firebase.firestore().collection('recipes').add(recipe).then((response) => {
             recipe.documentID = response.id;
             dispatch(createNewRecipe(recipe));
+            cleanupForm();
             setModalOpen(false);
         });
+    }
+
+    const cleanupForm = () => {
+        setRecipeName('');
+        setRecipeTime('');
+        setNumberOfIngredients(0);
+        setIngredients([]);
+        setHiddenIngredients([]);
+        setInstructions('');
     }
 
     const addIngredientToList = (index: number, ingredient: string) => {
