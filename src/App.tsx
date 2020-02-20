@@ -33,12 +33,17 @@ const App = () => {
   });
 
   firebase.auth().onAuthStateChanged((user) => {
-    localStorage.setItem("authUser", JSON.stringify(user));
+    if (user) {
+      localStorage.setItem("authUser", JSON.stringify(user));
+    } else {
+      localStorage.removeItem('authUser');
+      dispatch(signOutUser());
+    }
   })
 
   const logout = () => {
     firebase.auth().signOut().then((response) => {
-      dispatch(signOutUser(store.getState().auth.email));
+      dispatch(signOutUser());
       dispatch(deleteAll());
       dispatch(deleteAllRecipes());
       localStorage.removeItem("authUser");

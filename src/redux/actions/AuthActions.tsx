@@ -20,11 +20,11 @@ export const signInUser = (email: string, password: string): UserAuthAction => {
     }
 }
 
-export const signOutUser = (email: string): UserAuthAction => {
+export const signOutUser = (): UserAuthAction => {
     return {
         type: LOGOUT,
         payload: {
-            email: email,
+            email: '',
             password: '' // Not necessary for this one.
         }
     }

@@ -32,11 +32,13 @@ const SignIn = () => {
         event.stopPropagation();
         setError('');
         
-        firebase.auth().signInWithEmailAndPassword(email, password).then((response) => {
-            dispatch(signInUser(email, password));
-            setRedirect(true);
-        }, (error) => {
-            setError(error.message);
+        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
+            firebase.auth().signInWithEmailAndPassword(email, password).then((response) => {
+                dispatch(signInUser(email, password));
+                setRedirect(true);
+            }, (error) => {
+                setError(error.message);
+            });
         });
     }
 
