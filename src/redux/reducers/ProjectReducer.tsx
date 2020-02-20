@@ -11,7 +11,7 @@ const ProjectReducer = (state = defaultProjectState, action: ProjectAction) => {
         case CREATE_NEW_PROJECT:
             return {
                 ...state,
-                userProjects: [...state.userProjects, action.payload],
+                userProjects: [...state.userProjects.filter((project) => { return project.documentID !== action.documentID }), action.payload],
                 currentlyViewedProject: {}
             }
         case UPDATE_PROJECT:

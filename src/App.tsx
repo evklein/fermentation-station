@@ -22,8 +22,6 @@ const App = () => {
   const [dispatch, setDispatch] = useState(useDispatch);
   const [loggedIn, setLoggedIn] = useState(false);
 
-  console.log(process.env);
-
   if (!firebase.apps.length) {
     firebase.initializeApp(FirebaseConfig);
   }
