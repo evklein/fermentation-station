@@ -27,6 +27,9 @@ const CreateProjectModal = () => {
 
     
     const handleSubmit = () => {
+        console.log('Submitting. End date: ');
+        console.log(endDate);
+        
         const project = {
             name: projectName,
             owner: store.getState().auth.email,

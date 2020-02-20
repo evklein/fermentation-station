@@ -108,7 +108,7 @@ const ModifyProjectModal = () => {
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>End Date (Optional)</Form.Label>
-                            <Form.Control type="date" value={endDate ? formatDateAsISO(endDate) : ''} onChange={(event: React.FormEvent) => { setEndDate((event.currentTarget as any).value) }}></Form.Control>
+                            <Form.Control type="date" value={endDate ? formatDateAsISO(endDate) : ''} onChange={(event: React.FormEvent) => { setEndDate(new Date((event.currentTarget as any).value + 'T00:00:00' )) }}></Form.Control>
                         </Form.Group>
                         <Form.Group>
                             <Form.Check type="checkbox" defaultChecked={needsBurp} label="Needs Regular Burping" onChange={(event: React.FormEvent) => { setBurp(!needsBurp)}}></Form.Check>

@@ -45,9 +45,11 @@ const SignUp = () => {
     }
 
     const login = () => {
-        firebase.auth().signInWithEmailAndPassword(email, password).then((response) => {
-            dispatch(signInUser(email, password));
-            setRedirect(true);
+        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
+            firebase.auth().signInWithEmailAndPassword(email, password).then((response) => {
+                dispatch(signInUser(email, password));
+                setRedirect(true);
+            });
         });
     }
 
